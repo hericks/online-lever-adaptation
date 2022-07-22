@@ -1,5 +1,3 @@
-import torch
-
 from levers import IteratedLeverEnvironment
 from levers.partners import RandomPartner, FixedPatternPartner
 
@@ -7,6 +5,10 @@ from levers.partners import RandomPartner, FixedPatternPartner
 # Environment parameters
 payoffs = [1., 1.]
 n_iterations = 10
+
+# Use partner playing randomly...
+partner = RandomPartner()
+# ... or a partner playing a fixed pattern
 partner = FixedPatternPartner([0, 1, 0, 0])
 
 # Initialize environment
