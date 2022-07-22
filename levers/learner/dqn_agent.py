@@ -23,7 +23,7 @@ class DQNAgent():
         batch_size: int,
         lr: float,
         gamma: float = 1.0,
-        n_rounds_between_updates: int = 10
+        len_update_cycle: int = 10
     ):
         """
         Instantiate simple DQN-Agent with the following parameters:
@@ -37,16 +37,17 @@ class DQNAgent():
                 learning rate
             gamma (float):
                 discount factor
-            n_rounds_between_updates (int):
-                the number of rounds necessary to play 
+            update_target_every (int):
+                the number of rounds between two target updates
+                (=0,1 -> back-to-back updates)
         """
         # Set q- and target-network (equal at first)
         self.q_net = q_net
         self.target_net = deepcopy(q_net)
 
         # Save how frequently the target network should be updated
-        self.n_rounds_since_last_target_update = 0
-        self.n_rounds_between_update = n_rounds_between_updates
+        self.n_rounds_since_update = 0
+        self.len_update_cycle = len_update_cycle
 
         # Initialize the replay memory and batch size used for updates
         self.memory = ReplayMemory(capacity)
@@ -69,11 +70,52 @@ class DQNAgent():
         else:
             return torch.argmax(q_vals).item()
 
-    def train(self, transition: Transition, done: bool = False):
+    def update_memory(self, transition: Transition):
+        """Updates the learners experience. """
+        self.memory.push(transition)
+
+    def train(self, done: bool):
         """
-        Performs a single training step. If a transition is passed, it is 
-        pushed to the experience memory first. 
+        Pushes transition to the experience replay and performs a single 
+        training step. The parameter indicating a terminal state is used to
+        termine when to update the learner's target network.
         """
-        if transition:
-            self.memory.push(transition)
-        pass
+        # Perform training step only if experience replay is sufficiently filled
+        if len(self.memory) < self.batch_size:
+            return
+
+        # Obtain batch of samples and convert to stacked tensors
+        transitions = self.memory.sample(self.batch_size)
+        batch = Transition(*zip(*transitions))
+        states = torch.stack(batch.state)
+        actions = torch.tensor(batch.action).view((self.batch_size, 1))
+        next_states = torch.stack(batch.next_state)
+        rewards = torch.tensor(batch.reward).view_as(actions)
+        dones = torch.tensor(batch.done)
+
+        # Compute actual state action values
+        state_action_vals = self.q_net(states).gather(1, actions)
+
+        # Compute expected state action values
+        next_state_vals = torch.zeros_like(state_action_vals)
+        next_state_vals[~dones,:] = self.target_net(next_states[~dones,:]).max(
+            1, keepdim=True)[0].detach()
+        expected_state_action_vals = self.gamma * next_state_vals + rewards
+
+        # Compute loss
+        criterion = nn.SmoothL1Loss()
+        loss = criterion(state_action_vals, expected_state_action_vals)
+
+        # Optimize model
+        self.optim.zero_grad()
+        loss.backward()
+        # TODO: Should the gradient be clamped?
+        self.optim.step()
+
+        # Update the target model if necessary
+        if done:
+            self.n_rounds_since_update += 1
+
+        if self.n_rounds_since_update >= self.len_update_cycle:
+            self.target_net.load_state_dict(self.q_net.state_dict())
+            self.n_eps_since_last_update = 0
