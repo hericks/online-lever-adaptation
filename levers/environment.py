@@ -65,6 +65,14 @@ class IteratedLeverEnvironment:
         # Tuple[next_obs: torch.Tensor, reward: float, done: bool]
         return (self._get_obs(), reward, self._is_done())  
 
+    def dummy_obs(self) -> torch.Tensor:
+        """Returns a dummy observation for shape inference. """
+        return self._get_obs()
+
+    def n_actions(self) -> int:
+        """Returns the number of possible actions in the environment. """
+        return len(self.payoffs)
+
     def _get_obs(self) -> torch.Tensor:
         """Return the players observation of the current state. """
         empty = tensor([])
