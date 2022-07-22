@@ -55,7 +55,7 @@ class IteratedLeverEnvironment:
         )
 
         # Compute reward
-        reward = self.payoffs[action] if partner_action == action else 0.
+        reward = self.payoffs[action].item() if partner_action == action else 0.
 
         # Update internal environment state
         self.last_player_action = action
