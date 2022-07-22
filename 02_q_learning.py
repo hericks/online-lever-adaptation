@@ -30,8 +30,8 @@ env = IteratedLeverEnvironment(
 # Initialize DQN agent
 learner = DQNAgent(
     q_net=QNetwork(input_dim=len(env.dummy_obs()), n_actions=env.n_actions()),
-    capacity=8,
-    batch_size=4,
+    capacity=16,
+    batch_size=8,
     lr=0.005
 )
 
@@ -43,7 +43,7 @@ for epoch in range(200):
     # Step through environment
     while not done:
         # Obtain action from learner
-        action = learner.act(obs, epsilon=0.3)
+        action = learner.act(obs, epsilon=0.5)
         # Take stap in environment
         next_obs, reward, done = env.step(action)
         # Give experience to learner and train
