@@ -118,4 +118,4 @@ class DQNAgent():
 
         if self.n_rounds_since_update >= self.len_update_cycle:
             self.target_net.load_state_dict(self.q_net.state_dict())
-            self.n_eps_since_last_update = 0
+            self.n_rounds_since_update = 0
