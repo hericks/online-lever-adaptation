@@ -13,7 +13,7 @@ class LeverPartner:
         episode_step: int,
         last_player_action: int,
         last_partner_action: int,
-    ):
+    ) -> int:
         """Abstract act() method. """
         raise NotImplementedError
 
