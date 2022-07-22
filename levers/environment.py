@@ -54,11 +54,19 @@ class IteratedLeverEnvironment:
             last_player_action=self.last_player_action,
             last_partner_action=self.last_partner_action
         )
-        self.episode_step +=1
-        done = self.episode_step == self.episode_length
-        return (tensor([0, 0, 0]), 1.0, done)  
 
-    def _get_obs(self):
+        # Compute reward
+        reward = self.payoffs[action] if partner_action == action else 0.
+
+        # Update internal environment state
+        self.last_player_action = action
+        self.last_partner_action = partner_action
+        self.episode_step +=1
+
+        # Tuple[next_obs: torch.Tensor, reward: float, done: bool]
+        return (self._get_obs(), reward, self._is_done())  
+
+    def _get_obs(self) -> torch.Tensor:
         """Return the players observation of the current state. """
         empty = tensor([])
         step = tensor([self.episode_step]) if self.include_step else empty
@@ -69,3 +77,7 @@ class IteratedLeverEnvironment:
             partner_action[self.last_partner_action] = 1
         # [current_step? payoffs? partner-action (1-hot)]
         return torch.cat([step, payoffs, partner_action])
+
+    def _is_done(self) -> bool:
+        """Returns whether the environment is in a terminal state."""
+        return self.episode_step == self.episode_length
