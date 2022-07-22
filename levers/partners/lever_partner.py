@@ -2,6 +2,7 @@ import torch
 
 
 class LeverPartner:
+    """Abstract class for partner agent in iterated lever game. """
 
     def __init__(self):
         """Abstract __init__() method. """
