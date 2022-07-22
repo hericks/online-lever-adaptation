@@ -12,7 +12,7 @@ class IteratedLeverEnvironment:
 
     def __init__(
         self, 
-        payoffs: List,
+        payoffs: List[float],
         n_iterations: int, 
         partner: LeverPartner,
         include_step: bool = True,
