@@ -6,7 +6,6 @@ from torch import tensor
 from .partners import LeverPartner
 
 
-
 class IteratedLeverEnvironment:
     """Tensor implementation of the iterated lever environment. """
 
