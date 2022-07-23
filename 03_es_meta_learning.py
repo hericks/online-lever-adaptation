@@ -43,13 +43,16 @@ for es_epoch in range(1):
     population = es_strategy.ask()
 
     # Evaluate fitness for each population member
+    population_fitness = []
     for proposal_params in population:
         # Populate learner with proposal params
+        # TODO: Reset learner
         with torch.no_grad():
             for i, param in enumerate(learner.q_net.parameters()):
                 param.set_(proposal_params[i])
 
         # Evaluate learners fitness
+        member_fitness = 0
         for episode in range(1):
             # Reset environment
             obs = env.reset()
@@ -62,6 +65,7 @@ for es_epoch in range(1):
 
                 # Take stap in environment
                 next_obs, reward, done = env.step(action)
+                member_fitness += reward
 
                 # Give experience to learner and train
                 learner.update_memory(Transition(obs, action, next_obs, reward, done))
@@ -69,3 +73,6 @@ for es_epoch in range(1):
 
                 # Update next observation -> observation
                 obs = next_obs
+        population_fitness.append(member_fitness)
+
+    # TODO: Update the learners' parameters
