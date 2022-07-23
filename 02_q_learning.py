@@ -35,7 +35,7 @@ learner = DQNAgent(
     lr=0.005
 )
 
-for epoch in range(200):
+for episode in range(200):
     # Reset environment
     obs = env.reset()
     done = False
@@ -53,8 +53,8 @@ for epoch in range(200):
         obs = next_obs
 
     # Evaluate learner every 50 episodes
-    if (epoch+1) % 50 == 0:
-        print(f'--- AFTER EPOCH {epoch+1}')
+    if (episode+1) % 50 == 0:
+        print(f'--- AFTER EPISODE {episode+1}')
         observations = [
             torch.tensor([0., 1., 1., 0., 0.]),
             torch.tensor([1., 1., 1., 1., 0.]) 
