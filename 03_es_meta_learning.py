@@ -1,3 +1,4 @@
+from typing import List
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -7,7 +8,16 @@ from levers.partners import FixedPatternPartner
 from levers.learner import OpenES, DQNAgent, Transition
 
 
-def eval_learner(learner, n_episodes: int = 1):
+def eval_learner(
+    learner: DQNAgent,
+    env: IteratedLeverEnvironment,
+    n_episodes: int = 1
+):
+    """
+    Evaluates the q-learning DQN-Agent `learner` in the environment `env`
+    by rolling out `n_episodes` episodes. Cumulative reward serves as measure
+    of fitness.
+    """
     # Evaluate learners fitness
     cumulative_reward = 0
     for episode in range(n_episodes):
@@ -18,26 +28,35 @@ def eval_learner(learner, n_episodes: int = 1):
         # Step through environment
         while not done:
             # Obtain action from learner
-            action = learner.act(obs)
+            action = learner.act(obs, 0.3)
             # Take step in environment
             next_obs, reward, done = env.step(action)
             cumulative_reward += reward
             # Give experience to learner and train
-            # learner.update_memory(Transition(obs, action, next_obs, reward, done))
-            # learner.train(done)
+            learner.update_memory(Transition(obs, action, next_obs, reward, done))
+            learner.train(done)
             # Update next observation -> observation
             obs = next_obs
 
     return cumulative_reward
 
 
-def eval_population(population, n_episodes: int = 1):
+def eval_population(
+    population: List[DQNAgent],
+    env: IteratedLeverEnvironment,
+    n_episodes: int = 1
+):
+    """
+    Evaluates the list of q-learning DQN-Agents `population` in the environment
+    `env` by rolling out `n_episodes` episodes. Cumulative reward serves as
+    measure of fitness.
+    """
     population_fitness = []
     for params in population:
         # Populate learner with proposal params
         learner.reset(params)
         # Evaluate learner and save fitness
-        fitness = eval_learner(learner, n_episodes)
+        fitness = eval_learner(learner, env, n_episodes)
         population_fitness.append(fitness)
 
     return population_fitness
@@ -56,11 +75,11 @@ class QNetwork(nn.Module):
         return self.fc2(x)
 
 
-# Initialize the environment
+# Initialize environment
 env = IteratedLeverEnvironment(
-    payoffs=[1., 1.], 
-    n_iterations=2, 
-    partner=FixedPatternPartner([0, 1])
+    payoffs=[1., 1., 1.], 
+    n_iterations=6, 
+    partner=FixedPatternPartner([0, 1, 2])
 )
 
 # Initialize DQN agent
@@ -71,18 +90,46 @@ learner = DQNAgent(
     lr=0.01
 )
 
-es_strategy = OpenES(pop_size=30)
+# Initialize evolution strategy
+es_strategy = OpenES(
+    pop_size=20, 
+    sigma_init=0.04, sigma_decay=0.999, sigma_limit=0.01, 
+    optim_lr=0.01,
+    optim_maximize=True,
+)
+
+# Futher settings
+n_es_epochs = 20
+n_q_learning_episodes = 100
+print_every_k = 1
+
+# Reset strategy and perform evolve using Ask-Eval-Tell loop
 es_strategy.reset(learner.q_net.parameters())
-
-n_es_epochs = 10
-n_q_learning_episodes = 1
-
-# Perform evolution strategies using Ask-Eval-Tell loop
 for es_epoch in range(n_es_epochs):
     # Ask for proposal population
     population = es_strategy.ask()
     # Evaluate population
-    population_fitness = eval_population(population, n_q_learning_episodes)
-    print(population_fitness)
+    population_fitness = eval_population(population, env, n_q_learning_episodes)
     # Tell (update)
     mean = es_strategy.tell(population_fitness)
+
+    if (es_epoch + 1) % print_every_k == 0:
+        print('ES-EPOCH: {epoch:2d} | REWARD (MIN/MEAN/MAX): {min:.2f}, {mean:.2f}, {max:.2f}'.format(
+            epoch=es_epoch+1, 
+            min=min(population_fitness),
+            mean=sum(population_fitness) / es_strategy.pop_size,
+            max=max(population_fitness)
+        ))
+        observations = [
+            torch.tensor([0., 1., 1., 1., 0., 0., 0.]),
+            torch.tensor([1., 1., 1., 1., 1., 0., 0.]),
+            torch.tensor([2., 1., 1., 1., 0., 1., 0.]),
+            torch.tensor([3., 1., 1., 1., 0., 0., 1.]),
+            torch.tensor([4., 1., 1., 1., 1., 0., 0.]),
+            torch.tensor([5., 1., 1., 1., 0., 1., 0.]),
+        ]
+        for obs in observations:
+            q_vals = learner.q_net(obs)
+            print('obs: {obs}, q-values: {q_vals}, greedy-action: {action}'.format(
+                obs=obs, q_vals=q_vals, action=torch.argmax(q_vals)
+            ))
