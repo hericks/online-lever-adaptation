@@ -32,7 +32,7 @@ learner = DQNAgent(
     q_net=QNetwork(input_dim=len(env.dummy_obs()), n_actions=env.n_actions()),
     capacity=16,
     batch_size=8,
-    lr=1
+    lr=0.01
 )
 
 es_strategy = OpenES(pop_size=2)
@@ -50,17 +50,15 @@ def eval_learner(learner, n_episodes: int = 1):
         while not done:
             # Obtain action from learner
             action = learner.act(obs)
-
             # Take step in environment
             next_obs, reward, done = env.step(action)
             fitness += reward
-
             # Give experience to learner and train
             learner.update_memory(Transition(obs, action, next_obs, reward, done))
             learner.train(done)
-
             # Update next observation -> observation
             obs = next_obs
+
     return fitness
 
 def eval_population(population, n_episodes: int = 1):
@@ -71,14 +69,17 @@ def eval_population(population, n_episodes: int = 1):
         # Evaluate learner and save fitness
         fitness = eval_learner(learner, n_episodes)
         population_fitness.append(fitness)
+
     return population_fitness
 
 N_ES_EPOCHS = 1
 N_Q_LEARNING_EPISODES = 10
 
+# Perform evolution strategies using Ask-Eval-Tell loop
 for es_epoch in range(N_ES_EPOCHS):
     # Ask for proposal population
     population = es_strategy.ask()
+    # Evaluate population
     population_fitness = eval_population(population, N_Q_LEARNING_EPISODES)
-    # TODO: Update the learners' parameters
+    # TODO: Update (tell) learners' parameters
     print(population_fitness)
