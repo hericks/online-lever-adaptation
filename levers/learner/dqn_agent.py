@@ -86,7 +86,7 @@ class DQNAgent():
         """
         # TODO: If the number of actions was stored once, the evaluation of 
         # the q-network could be avoided for epsilon-greedy policies.
-        q_vals = self.q_net(torch.zeros_like(obs))
+        q_vals = self.q_net(obs)
         if random.uniform(0, 1) < epsilon:
             return random.randrange(0, len(q_vals))
         else:
