@@ -7,6 +7,42 @@ from levers.partners import FixedPatternPartner
 from levers.learner import OpenES, DQNAgent, Transition
 
 
+def eval_learner(learner, n_episodes: int = 1):
+    # Evaluate learners fitness
+    cumulative_reward = 0
+    for episode in range(n_episodes):
+        # Reset environment
+        obs = env.reset()
+        done = False
+
+        # Step through environment
+        while not done:
+            # Obtain action from learner
+            action = learner.act(obs)
+            # Take step in environment
+            next_obs, reward, done = env.step(action)
+            cumulative_reward += reward
+            # Give experience to learner and train
+            # learner.update_memory(Transition(obs, action, next_obs, reward, done))
+            # learner.train(done)
+            # Update next observation -> observation
+            obs = next_obs
+
+    return cumulative_reward
+
+
+def eval_population(population, n_episodes: int = 1):
+    population_fitness = []
+    for params in population:
+        # Populate learner with proposal params
+        learner.reset(params)
+        # Evaluate learner and save fitness
+        fitness = eval_learner(learner, n_episodes)
+        population_fitness.append(fitness)
+
+    return population_fitness
+
+
 class QNetwork(nn.Module):
     """Simple single hidden layer MLP with 4 hidden units. """
 
@@ -24,7 +60,7 @@ class QNetwork(nn.Module):
 env = IteratedLeverEnvironment(
     payoffs=[1., 1.], 
     n_iterations=2, 
-    partner=FixedPatternPartner([0])
+    partner=FixedPatternPartner([0, 1])
 )
 
 # Initialize DQN agent
@@ -35,51 +71,18 @@ learner = DQNAgent(
     lr=0.01
 )
 
-es_strategy = OpenES(pop_size=2)
+es_strategy = OpenES(pop_size=30)
 es_strategy.reset(learner.q_net.parameters())
 
-def eval_learner(learner, n_episodes: int = 1):
-    # Evaluate learners fitness
-    fitness = 0
-    for episode in range(n_episodes):
-        # Reset environment
-        obs = env.reset()
-        done = False
-
-        # Step through environment
-        while not done:
-            # Obtain action from learner
-            action = learner.act(obs)
-            # Take step in environment
-            next_obs, reward, done = env.step(action)
-            fitness += reward
-            # Give experience to learner and train
-            learner.update_memory(Transition(obs, action, next_obs, reward, done))
-            learner.train(done)
-            # Update next observation -> observation
-            obs = next_obs
-
-    return fitness
-
-def eval_population(population, n_episodes: int = 1):
-    population_fitness = []
-    for proposal_params in population:
-        # Populate learner with proposal params
-        learner.reset(proposal_params)
-        # Evaluate learner and save fitness
-        fitness = eval_learner(learner, n_episodes)
-        population_fitness.append(fitness)
-
-    return population_fitness
-
-N_ES_EPOCHS = 1
-N_Q_LEARNING_EPISODES = 10
+n_es_epochs = 10
+n_q_learning_episodes = 1
 
 # Perform evolution strategies using Ask-Eval-Tell loop
-for es_epoch in range(N_ES_EPOCHS):
+for es_epoch in range(n_es_epochs):
     # Ask for proposal population
     population = es_strategy.ask()
     # Evaluate population
-    population_fitness = eval_population(population, N_Q_LEARNING_EPISODES)
-    # TODO: Update (tell) learners' parameters
+    population_fitness = eval_population(population, n_q_learning_episodes)
     print(population_fitness)
+    # Tell (update)
+    mean = es_strategy.tell(population_fitness)
