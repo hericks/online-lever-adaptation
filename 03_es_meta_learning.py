@@ -32,47 +32,53 @@ learner = DQNAgent(
     q_net=QNetwork(input_dim=len(env.dummy_obs()), n_actions=env.n_actions()),
     capacity=16,
     batch_size=8,
-    lr=0.005
+    lr=1
 )
 
-es_strategy = OpenES(pop_size=20)
+es_strategy = OpenES(pop_size=2)
 es_strategy.reset(learner.q_net.parameters())
 
-for es_epoch in range(1):
-    # Ask for proposal population
-    population = es_strategy.ask()
+def eval_learner(learner, n_episodes: int = 1):
+    # Evaluate learners fitness
+    fitness = 0
+    for episode in range(n_episodes):
+        # Reset environment
+        obs = env.reset()
+        done = False
 
-    # Evaluate fitness for each population member
+        # Step through environment
+        while not done:
+            # Obtain action from learner
+            action = learner.act(obs)
+
+            # Take step in environment
+            next_obs, reward, done = env.step(action)
+            fitness += reward
+
+            # Give experience to learner and train
+            learner.update_memory(Transition(obs, action, next_obs, reward, done))
+            learner.train(done)
+
+            # Update next observation -> observation
+            obs = next_obs
+    return fitness
+
+def eval_fitness(population, n_episodes: int = 1):
     population_fitness = []
     for proposal_params in population:
         # Populate learner with proposal params
-        # TODO: Reset learner
-        with torch.no_grad():
-            for i, param in enumerate(learner.q_net.parameters()):
-                param.set_(proposal_params[i])
+        learner.reset(proposal_params)
+        # Evaluate learner and save fitness
+        fitness = eval_learner(learner, n_episodes)
+        population_fitness.append(fitness)
+    return population_fitness
 
-        # Evaluate learners fitness
-        member_fitness = 0
-        for episode in range(1):
-            # Reset environment
-            obs = env.reset()
-            done = False
+N_ES_EPOCHS = 1
+N_Q_LEARNING_EPISODES = 10
 
-            # Step through environment
-            while not done:
-                # Obtain action from learner
-                action = learner.act(obs)
-
-                # Take stap in environment
-                next_obs, reward, done = env.step(action)
-                member_fitness += reward
-
-                # Give experience to learner and train
-                learner.update_memory(Transition(obs, action, next_obs, reward, done))
-                learner.train(done)
-
-                # Update next observation -> observation
-                obs = next_obs
-        population_fitness.append(member_fitness)
-
+for es_epoch in range(N_ES_EPOCHS):
+    # Ask for proposal population
+    population = es_strategy.ask()
+    population_fitness = eval_fitness(population, N_Q_LEARNING_EPISODES)
     # TODO: Update the learners' parameters
+    print(population_fitness)
