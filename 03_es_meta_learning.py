@@ -63,7 +63,7 @@ def eval_learner(learner, n_episodes: int = 1):
             obs = next_obs
     return fitness
 
-def eval_fitness(population, n_episodes: int = 1):
+def eval_population(population, n_episodes: int = 1):
     population_fitness = []
     for proposal_params in population:
         # Populate learner with proposal params
@@ -79,6 +79,6 @@ N_Q_LEARNING_EPISODES = 10
 for es_epoch in range(N_ES_EPOCHS):
     # Ask for proposal population
     population = es_strategy.ask()
-    population_fitness = eval_fitness(population, N_Q_LEARNING_EPISODES)
+    population_fitness = eval_population(population, N_Q_LEARNING_EPISODES)
     # TODO: Update the learners' parameters
     print(population_fitness)
