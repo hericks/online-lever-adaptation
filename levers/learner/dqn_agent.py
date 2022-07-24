@@ -1,6 +1,7 @@
 from copy import deepcopy
 
 import random
+from typing import List
 
 import torch
 import torch.nn as nn
@@ -56,6 +57,27 @@ class DQNAgent():
         # (the learned parameters are frequently copied to the target network)
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
         self.gamma = gamma
+        # Save initial learning rate for later agent resets
+        self.lr = lr
+
+    def reset(self, params: List = None):
+        """
+        Resets the agent (memory, target updates, optimizer). 
+        If `params` is non-empty, the passed parameters are cloned into the
+        policy network.
+        """
+        # Reset experience replay
+        self.memory = ReplayMemory(self.memory.memory.maxlen)
+        # If desired, reset policy network
+        if params:
+            with torch.no_grad():
+                for i, param in enumerate(self.q_net.parameters()):
+                    param.set_(params[i].clone().detach())
+        # Reset q-learning optimizer
+        self.optim = optim.RMSprop(self.q_net.parameters(), lr=self.lr)
+        # Reset target network
+        self.target_net = deepcopy(self.q_net)
+        self.n_rounds_since_update = 0
 
     def act(self, obs: torch.Tensor, epsilon: float = 0) -> int:
         """
