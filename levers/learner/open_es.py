@@ -2,6 +2,8 @@ from copy import deepcopy
 from numpy import zeros_like
 
 import torch
+import torch.optim as optim
+from torch.autograd import Variable
 
 
 class OpenES:
@@ -9,75 +11,59 @@ class OpenES:
     def __init__(self, pop_size: int = 20):
         assert pop_size % 2 == 0
         self.pop_size = pop_size
+        self.sigma = 1
 
+        #
         self.mean = None
+        self.population = None
+        self.noise_population = None
+
+        #
+        self.maximize = True
 
     def reset(self, params):
         self.mean = []
         for param in params:
-            self.mean.append(param.clone().detach())
+            self.mean.append(Variable(param.clone().detach()))
+        # TODO: Specify learning rate
+        self.optim = optim.Adam(self.mean, lr=1)
 
     def ask(self):
         # Antithetic sampling of noise
-        population = []
+        self.population = []
+        self.noise_population = []
         for _ in range(self.pop_size // 2):
             x_pos = []
             x_neg = []
+            noise_pos = []
+            noise_neg = []
             for param in self.mean:
-                noise = torch.rand_like(param)
-                x_pos.append(param + noise)
-                x_neg.append(param - noise)
-            population.append(x_pos)
-            population.append(x_neg)
-        return population
+                noise = torch.randn_like(param)
+                x_pos.append(param + self.sigma * noise)
+                x_neg.append(param - self.sigma * noise)
+                noise_pos.append(+noise)
+                noise_neg.append(-noise)
+                # TODO: Should I add sigma here?
+            self.population.append(x_pos)
+            self.population.append(x_neg)
+            self.noise_population.append(noise_pos)
+            self.noise_population.append(noise_neg)
+        return self.population
 
-# class OpenES:
+    def tell(self, population_fitness):
+        n_params = len(self.noise_population[0])
+        grad = []
+        for i in range(n_params):
+            grad.append(
+                torch.sum(
+                    torch.stack([population_fitness[j] * noise[i] for j, noise in enumerate(self.noise_population)]), 
+                    dim=0
+                ) / (self.pop_size * self.sigma)
+            )
+        # Set gradients manually
+        self.optim.zero_grad()
+        for i, param in enumerate(self.mean):
+            param.grad = -grad[i] if self.maximize else grad[i]
+        self.optim.step()
 
-#     def __init__(
-#         self,
-#         pop_size: int = 20,
-#         sigma_init: float = 0.04,
-#         sigma_decay: float = 0.999,
-#         sigma_limit: float = 0.01,
-#         init_min: float = 0.0,
-#         init_max: float = 0.0,
-#         clip_min: float = torch.finfo.min,
-#         clip_max: float = torch.finfo.max
-#     ):
-#         self.pop_size = pop_size
-
-#         self.sigma_init = sigma_init
-#         self.sigma_decay = sigma_decay
-#         self.sigma_limit = sigma_limit
-#         self.init_min = init_min
-#         self.init_max = init_max
-#         self.clip_min = clip_min
-#         self.clip_max = clip_max
-
-#         self.sigma = 0
-#         self.shapes = None
-#         self.mean = None
-
-#     def reset(self, params):
-#         self.sigma = self.sigma_init
-#         self.shapes = []
-#         self.mean = []
-#         for param in params:
-#             self.mean.append(torch.zeros_like(param))
-#             self.shapes.append(param.shape)
-
-#     def ask_strategy(self):
-#         new_population = []
-#         for i in range(self.pop_size // 2):
-#             pos = []
-#             neg = []
-#             for i, shape in enumerate(self.shapes):
-#                 z = torch.randn(*shape)
-#                 pos.append(self.mean[i] + self.sigma * z)
-#                 neg.append(self.mean[i] - self.sigma * z)
-#             new_population.append(pos)
-#             new_population.append(neg)
-#         return new_population
-
-#     def tell_strategy(self):
-#         pass
+        return self.mean
