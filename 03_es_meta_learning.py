@@ -99,7 +99,7 @@ es_strategy = OpenES(
 )
 
 # Futher settings
-n_es_epochs = 20
+n_es_epochs = 10
 n_q_learning_episodes = 100
 print_every_k = 1
 
