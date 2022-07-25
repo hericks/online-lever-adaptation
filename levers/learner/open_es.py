@@ -1,10 +1,11 @@
-from copy import deepcopy
-from typing import Iterator, List
-from numpy import zeros_like
+from typing import Iterator, List, Dict
 
 import torch
 import torch.optim as optim
 from torch.autograd import Variable
+
+
+# TODO: Should parameters be copied or initialized to zero at reset()?
 
 
 class OpenES:
@@ -39,25 +40,33 @@ class OpenES:
         self.maximize = optim_maximize
 
         # Current parameters / population of parameters / population of noise
-        self.mean = None
+        self.means_dict = None
         self.population = None
         self.noise_population = None
 
-    def reset(self, params: Iterator):
+    def reset(self, params_dict: Dict[str, Iterator]):
         """
-        Reset strategy to train parameters similar to `params`.
+        Reset strategy to train parameters similar to those stored in the
+        values of `parametersets`.
         """
-        # TODO: Should the parameters be copied or initialized to zero?
         # Reset current value of sigma
         self.sigma = self.sigma_init
-        # Define parameters to train using ES
-        self.mean = []
-        for param in params:
-            self.mean.append(Variable(param.clone().detach()))
-        # Initialize corresponding optimizer
-        self.optim = optim.Adam(self.mean, lr=self.lr)
 
-    def ask(self) -> List:
+        # Define parameters to train using ES
+        self.means_dict = dict()
+        for params_name, params in params_dict.items():
+            self.means_dict[params_name] = []
+            for param in params:
+                self.means_dict[params_name].append(
+                    Variable(param.clone().detach()))
+
+        # Create joint set of variables to optimize and initialize 
+        # corresponding optimizer
+        vars = [
+            param for params in self.means_dict.values() for param in params]
+        self.optim = optim.Adam(vars, lr=self.lr)
+
+    def ask(self) -> Dict[str, List[torch.Tensor]]:
         """
         Returns list of proposed parameter lists.
         """
@@ -65,48 +74,62 @@ class OpenES:
         self.population = []
         self.noise_population = []
         for _ in range(self.pop_size // 2):
-            x_pos = []
-            x_neg = []
-            noise_pos = []
-            noise_neg = []
-            for param in self.mean:
-                noise = torch.randn_like(param)
-                x_pos.append(param + self.sigma * noise)
-                x_neg.append(param - self.sigma * noise)
-                noise_pos.append(+ noise)
-                noise_neg.append(- noise)
-                # TODO: Should I add sigma here?
-            self.population.append(x_pos)
-            self.population.append(x_neg)
+            x_pos = {}
+            x_neg = {}
+            noise_pos = {}
+            noise_neg = {}
+            for params_name, params in self.means_dict.items():
+                x_pos[params_name] = []
+                x_neg[params_name] = []
+                noise_pos[params_name] = []
+                noise_neg[params_name] = []
+                for param in params:
+                    noise = torch.randn_like(param)
+                    x_pos[params_name].append(param + self.sigma * noise)
+                    x_neg[params_name].append(param - self.sigma * noise)
+                    noise_pos[params_name].append(+ noise)
+                    noise_neg[params_name].append(- noise)
+            self.population.append(x_pos) 
+            self.population.append(x_neg) 
             self.noise_population.append(noise_pos)
             self.noise_population.append(noise_neg)
         return self.population
 
-    def tell(self, population_fitness):
+    def tell(
+        self, population_fitness: List[float]) -> Dict[str, List[torch.Tensor]]:
         """
-        Updates and returns internal mean parameters based on population 
-        fitness evaluation externally using Open-ES algorithm. 
+        Updates and returns internal dictionary of mean parameters
+        based on external population fitness evaluation using Open-ES algorithm. 
         """
         # TODO: Optimize and simplify this loop
-        n_params = len(self.noise_population[0])
-        grad = []
-        for i in range(n_params):
-            grad.append(
-                # OpenES update. Reference:
-                # https://arxiv.org/pdf/1703.03864.pdf
-                torch.sum(
-                    torch.stack([population_fitness[j] * noise[i] for j, noise in enumerate(self.noise_population)]), 
-                    dim=0
-                ) / (self.pop_size * self.sigma)
-            )
+        grads_dict = dict()
+        for params_name, params in self.means_dict.items():
+            grads = []
+            n_params = len(params)
+            for i in range(n_params):
+                grads.append(
+                    # OpenES update. Reference:
+                    # https://arxiv.org/pdf/1703.03864.pdf
+                    torch.sum(
+                        torch.stack([
+                            population_fitness[j] * noise[params_name][i]
+                            for j, noise in enumerate(self.noise_population)
+                        ]), dim=0
+                    ) / (self.pop_size * self.sigma)
+                )
+            grads_dict[params_name] = grads
 
         # Set gradients manually and take gradient step using internal optimizer
         self.optim.zero_grad()
-        for i, param in enumerate(self.mean):
-            param.grad = -grad[i] if self.maximize else grad[i]
+        for params_name, params in self.means_dict.items():
+            for i, param in enumerate(params):
+                if self.maximize:
+                    param.grad = -grads_dict[params_name][i]
+                else:
+                    grads_dict[params_name][i]
         self.optim.step()
 
         # Update sigma
         self.sigma = max(self.sigma * self.sigma_decay, self.sigma_limit)
 
-        return self.mean
+        return self.means_dict
