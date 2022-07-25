@@ -100,9 +100,9 @@ es_strategy = OpenES(
 )
 
 # Futher settings
-n_es_epochs = 1000
+n_es_epochs = 250
 n_q_learning_episodes = 10
-print_every_k = 5
+print_every_k = 1
 
 # Reset strategy and perform evolve using Ask-Eval-Tell loop
 es_strategy.reset(learner.q_net.parameters())
