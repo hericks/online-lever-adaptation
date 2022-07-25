@@ -52,9 +52,9 @@ def eval_population(
     measure of fitness.
     """
     population_fitness = []
-    for params in population:
+    for member in population:
         # Populate learner with proposal params
-        learner.reset(params)
+        learner.reset(member['q_net'])
         # Evaluate learner and save fitness
         fitness = eval_learner(learner, env, n_episodes)
         population_fitness.append(fitness)
@@ -105,7 +105,7 @@ n_q_learning_episodes = 10
 print_every_k = 1
 
 # Reset strategy and perform evolve using Ask-Eval-Tell loop
-es_strategy.reset(learner.q_net.parameters())
+es_strategy.reset({'q_net': learner.q_net.parameters()})
 for es_epoch in range(n_es_epochs):
     # Ask for proposal population
     population = es_strategy.ask()
@@ -115,7 +115,7 @@ for es_epoch in range(n_es_epochs):
     mean = es_strategy.tell(population_fitness)
 
     if (es_epoch + 1) % print_every_k == 0:
-        learner.reset(mean)
+        learner.reset(mean['q_net'])
         observations = [
             torch.tensor([0., 0., 0., 0.]),
             torch.tensor([1., 1., 0., 0.]),
