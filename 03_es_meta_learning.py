@@ -95,7 +95,7 @@ learner = DQNAgent(
 es_strategy = OpenES(
     pop_size=50, 
     sigma_init=0.1, sigma_decay=0.999, sigma_limit=0.01, 
-    optim_lr=0.01,
+    optim_lr=0.05,
     optim_maximize=True,
 )
 
