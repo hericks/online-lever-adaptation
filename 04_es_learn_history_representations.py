@@ -34,7 +34,7 @@ def eval_learner(
             # Take step in environment
             next_obs, reward, done = env.step(action)
             cumulative_reward += reward
-            # Comute history representation
+            # Compute history representation
             next_obs_rep, next_hidden = hr_net(next_obs.unsqueeze(0), hidden)
             # Give experience to learner and train
             learner.update_memory(
@@ -96,7 +96,7 @@ class QNetwork(nn.Module):
 env = IteratedLeverEnvironment(
     payoffs=[1., 1., 1.], 
     n_iterations=6, 
-    partner=FixedPatternPartner([0, 1, 2]),
+    partner=FixedPatternPartner([0, 1, 1]),
     include_step=False,
     include_payoffs=False,
 )
@@ -113,7 +113,7 @@ hr_net = nn.LSTM(
 learner = DQNAgent(
     q_net=QNetwork(input_dim=hr_output_size, n_actions=env.n_actions()),
     capacity=16,
-    batch_size=2,
+    batch_size=8,
     lr=0.01
 )
 
@@ -121,13 +121,13 @@ learner = DQNAgent(
 es_strategy = OpenES(
     pop_size=50, 
     sigma_init=0.1, sigma_decay=0.999, sigma_limit=0.01, 
-    optim_lr=0.05,
+    optim_lr=0.01,
     optim_maximize=True,
 )
 
 # Further settings
-n_es_epochs = 100
-n_q_learning_episodes = 10
+n_es_epochs = 150
+n_q_learning_episodes = 20
 print_every_k = 1
 
 # Reset strategy and perform evolve using Ask-Eval-Tell loop
