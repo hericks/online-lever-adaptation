@@ -28,7 +28,7 @@ def eval_learner(
         # Step through environment
         while not done:
             # Obtain action from learner
-            action = learner.act(obs, 0.3)
+            action = learner.act(obs, epsilon=0.3)
             # Take step in environment
             next_obs, reward, done = env.step(action)
             cumulative_reward += reward
@@ -79,7 +79,8 @@ class QNetwork(nn.Module):
 env = IteratedLeverEnvironment(
     payoffs=[1., 1., 1.], 
     n_iterations=6, 
-    partner=FixedPatternPartner([0, 1, 2])
+    partner=FixedPatternPartner([0, 1, 2]),
+    include_payoffs=False,
 )
 
 # Initialize DQN agent
@@ -92,16 +93,16 @@ learner = DQNAgent(
 
 # Initialize evolution strategy
 es_strategy = OpenES(
-    pop_size=20, 
-    sigma_init=0.04, sigma_decay=0.999, sigma_limit=0.01, 
+    pop_size=50, 
+    sigma_init=0.1, sigma_decay=0.999, sigma_limit=0.01, 
     optim_lr=0.01,
     optim_maximize=True,
 )
 
 # Futher settings
-n_es_epochs = 10
-n_q_learning_episodes = 100
-print_every_k = 1
+n_es_epochs = 1000
+n_q_learning_episodes = 10
+print_every_k = 5
 
 # Reset strategy and perform evolve using Ask-Eval-Tell loop
 es_strategy.reset(learner.q_net.parameters())
@@ -114,22 +115,21 @@ for es_epoch in range(n_es_epochs):
     mean = es_strategy.tell(population_fitness)
 
     if (es_epoch + 1) % print_every_k == 0:
-        print('ES-EPOCH: {epoch:2d} | REWARD (MIN/MEAN/MAX): {min:.2f}, {mean:.2f}, {max:.2f}'.format(
+        learner.reset(mean)
+        observations = [
+            torch.tensor([0., 0., 0., 0.]),
+            torch.tensor([1., 1., 0., 0.]),
+            torch.tensor([2., 0., 1., 0.]),
+            torch.tensor([3., 0., 0., 1.]),
+            torch.tensor([4., 1., 0., 0.]),
+            torch.tensor([5., 0., 1., 0.]),
+        ]
+        greedy_pattern = [
+            torch.argmax(learner.q_net(obs)).item() for obs in observations]
+        print('ES-EPOCH: {epoch:2d} | REWARD (MIN/MEAN/MAX): {min:.2f}, {mean:.2f}, {max:.2f} | GREEDY-PATTERN: {pattern}'.format(
             epoch=es_epoch+1, 
             min=min(population_fitness),
             mean=sum(population_fitness) / es_strategy.pop_size,
-            max=max(population_fitness)
+            max=max(population_fitness),
+            pattern=greedy_pattern
         ))
-        observations = [
-            torch.tensor([0., 1., 1., 1., 0., 0., 0.]),
-            torch.tensor([1., 1., 1., 1., 1., 0., 0.]),
-            torch.tensor([2., 1., 1., 1., 0., 1., 0.]),
-            torch.tensor([3., 1., 1., 1., 0., 0., 1.]),
-            torch.tensor([4., 1., 1., 1., 1., 0., 0.]),
-            torch.tensor([5., 1., 1., 1., 0., 1., 0.]),
-        ]
-        for obs in observations:
-            q_vals = learner.q_net(obs)
-            print('obs: {obs}, q-values: {q_vals}, greedy-action: {action}'.format(
-                obs=obs, q_vals=q_vals, action=torch.argmax(q_vals)
-            ))
