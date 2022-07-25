@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Dict
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -42,14 +43,14 @@ def eval_learner(
 
 
 def eval_population(
-    population: List[DQNAgent],
+    population: Dict[str, List[DQNAgent]],
     env: IteratedLeverEnvironment,
     n_episodes: int = 1
 ):
     """
-    Evaluates the list of q-learning DQN-Agents `population` in the environment
-    `env` by rolling out `n_episodes` episodes. Cumulative reward serves as
-    measure of fitness.
+    Evaluates the list of parameters for a q-learning DQN-Agent `population`
+    in the environment `env` by rolling out `n_episodes` episodes.
+    Cumulative reward serves as measure of fitness.
     """
     population_fitness = []
     for member in population:
