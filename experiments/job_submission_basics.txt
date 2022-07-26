@@ -1,0 +1,12 @@
+# Submit slurm job
+# CAUTION: Exit any conda environment before submitting slurm job
+sbatch submit.sh
+
+# Inspect job queue (-> job-id)
+squeue -u $USER
+
+# Inspect additional information (-> StdOut/StdErr)
+scontrol show job job-id
+
+# Cancel slurm jobs
+scancel job-id
