@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from levers import IteratedLeverEnvironment
+from levers.learner.history_shaper import HistoryShaper
 from levers.partners import FixedPatternPartner
 from levers.learner import OpenES, DQNAgent, Transition
 
@@ -11,7 +12,7 @@ from levers.learner import OpenES, DQNAgent, Transition
 def eval_learner(
     learner: DQNAgent,
     env: IteratedLeverEnvironment,
-    hr_net: nn.Module,
+    hist_shaper: HistoryShaper,
     n_episodes: int = 1
 ):
     """
@@ -24,7 +25,7 @@ def eval_learner(
     for episode in range(n_episodes):
         # Reset environment
         obs = env.reset()
-        obs_rep, hidden = hr_net(obs.unsqueeze(0))
+        obs_rep, hidden = hist_shaper.net(obs.unsqueeze(0))
         done = False
 
         # Step through environment
@@ -35,7 +36,8 @@ def eval_learner(
             next_obs, reward, done = env.step(action)
             cumulative_reward += reward
             # Compute history representation
-            next_obs_rep, next_hidden = hr_net(next_obs.unsqueeze(0), hidden)
+            next_obs_rep, next_hidden = hist_shaper.net(
+                next_obs.unsqueeze(0), hidden)
             # Give experience to learner and train
             learner.update_memory(
                 Transition(
@@ -57,6 +59,8 @@ def eval_learner(
 def eval_population(
     population: List[DQNAgent],
     env: IteratedLeverEnvironment,
+    learner: DQNAgent,
+    hist_shaper: HistoryShaper,
     n_episodes: int = 1
 ):
     """
@@ -66,14 +70,11 @@ def eval_population(
     """
     population_fitness = []
     for member in population:
-        # Populate learner with proposal params
+        # Populate learner and history shaper with proposal params
         learner.reset(member['q_net'])
-        # Populate history representation net with proposal params
-        with torch.no_grad():
-            for i, param in enumerate(hr_net.parameters()):
-                param.set_(member['hr_net'][i].clone().detach())
+        hist_shaper.reset(member['hs_net'])
         # Evaluate learner and save fitness
-        fitness = eval_learner(learner, env, hr_net, n_episodes)
+        fitness = eval_learner(learner, env, hist_shaper, n_episodes)
         population_fitness.append(fitness)
 
     return population_fitness
@@ -96,17 +97,15 @@ class QNetwork(nn.Module):
 env = IteratedLeverEnvironment(
     payoffs=[1., 1., 1.], 
     n_iterations=6, 
-    partner=FixedPatternPartner([0, 1, 1]),
+    partner=FixedPatternPartner([0, 1, 2]),
     include_step=False,
     include_payoffs=False,
 )
 
-# History representation LSTM
+# Initialize history shaper with LSTM net
 hr_output_size=4
-hr_net = nn.LSTM(
-    input_size=len(env.dummy_obs()),
-    hidden_size=hr_output_size,
-    num_layers=1,
+hist_shaper = HistoryShaper(
+    hs_net=nn.LSTM(input_size=len(env.dummy_obs()), hidden_size=hr_output_size)
 )
 
 # Initialize DQN agent
@@ -133,17 +132,22 @@ print_every_k = 1
 # Reset strategy and perform evolve using Ask-Eval-Tell loop
 es_params = {
     'q_net': learner.q_net.parameters(),
-    'hr_net': hr_net.parameters(),
+    'hs_net': hist_shaper.net.parameters(),
 }
 es_strategy.reset(es_params)
 for es_epoch in range(n_es_epochs):
     # Ask for proposal population
     population = es_strategy.ask()
+
     # Evaluate population
-    population_fitness = eval_population(population, env, n_q_learning_episodes)
+    population_fitness = eval_population(
+        population, env, learner, hist_shaper, n_q_learning_episodes
+    )
+
     # Tell (update)
     mean = es_strategy.tell(population_fitness)
 
+    # Log epoch stats
     if (es_epoch + 1) % print_every_k == 0:
         print('ES-EPOCH: {epoch:2d} (sigma={sigma:2.2f}) | REWARD (MIN/MEAN/MAX): {min:2.2f}, {mean:2.2f}, {max:2.2f}'.format(
             epoch=es_epoch+1, 
