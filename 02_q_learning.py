@@ -35,7 +35,7 @@ for episode in range(200):
     while not done:
         # Obtain action from learner
         action = learner.act(obs, epsilon=0.5)
-        # Take stap in environment
+        # Take step in environment
         next_obs, reward, done = env.step(action)
         # Give experience to learner and train
         learner.update_memory(Transition(obs, action, next_obs, reward, done))
