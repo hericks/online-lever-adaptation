@@ -63,19 +63,6 @@ def eval_population(
     return population_fitness
 
 
-class QNetwork(nn.Module):
-    """Simple single hidden layer MLP with 4 hidden units. """
-
-    def __init__(self, input_dim, n_actions):
-        super(QNetwork, self).__init__()
-        self.fc1 = nn.Linear(input_dim, 4)
-        self.fc2 = nn.Linear(4, n_actions)
-
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        return self.fc2(x)
-
-
 # Initialize environment
 env = IteratedLeverEnvironment(
     payoffs=[1., 1., 1.], 
@@ -86,7 +73,11 @@ env = IteratedLeverEnvironment(
 
 # Initialize DQN agent
 learner = DQNAgent(
-    q_net=QNetwork(input_dim=len(env.dummy_obs()), n_actions=env.n_actions()),
+    q_net=nn.Sequential(
+        nn.Linear(len(env.dummy_obs()), 4),
+        nn.ReLU(),
+        nn.Linear(4, env.n_actions())
+    ),
     capacity=16,
     batch_size=8,
     lr=0.01
