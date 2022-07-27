@@ -15,7 +15,6 @@ from .replay_memory import Transition, ReplayMemory
 
 
 class DQNAgent():
-    """Learner suitable for simple Q-Learning. """
 
     def __init__(
         self,
@@ -27,7 +26,10 @@ class DQNAgent():
         len_update_cycle: int = 10
     ):
         """
-        Instantiate simple DQN-Agent with the following parameters:
+        Learner suitable for simple Q-Learning with neural network function
+        approximation.
+
+        Parameters:
             q_net (nn.Module):
                 network to use for q- and target-network
             capacity (int):
