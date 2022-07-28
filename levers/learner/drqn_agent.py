@@ -51,34 +51,39 @@ class DRQNAgent():
         len_update_cycle: int = 10,
         tau: float = 1.0,
     ):
-        """
-        Simple implementation of Learner performung simple DRQ-Learning.
-        """
+        """Learner suitable for simple DRQ-Learning. """
         # Set q- and target-network (equal at first)
         self.q_net = q_net
         self.target_net = deepcopy(q_net)
 
+        # Save how frequently and soft the target network should be updated
+        self.n_rounds_since_update = 0
+        self.len_update_cycle = len_update_cycle
+        self.tau = tau # = 1.0 -> hard update, = 0.0 -> no update
+
+        # Initialize the replay memory, current trajectory buffer, and
+        # batch size used for updates
         self.replay_memory = ReplayMemory(capacity=capacity)
         self.buffer: TrajectoryBuffer = None
         self.batch_size = batch_size
 
-        # Save how frequently the target network should be updated
-        self.n_rounds_since_update = 0
-        self.len_update_cycle = len_update_cycle
-        self.tau = tau
-
-        self.gamma = 1.0
-        self.hidden=None
-
-        # Initialize optimizer for DRQ-network
+        # Initialize optimizer for RQ-network
         # (the learned parameters are frequently copied to the target network)
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
+        self.gamma = 1.0
+
+        # Internal hidden states used for acting
+        self.hidden=None
 
     def reset_trajectory_buffer(self, init_obs: torch.Tensor):
-        self.episode_hist = TrajectoryBuffer(
+        """
+        Resets the trajectory buffer with the initial observation `init_obs`
+        and resets the hidden state. 
+        """
+        self.hidden = None
+        self.buffer = TrajectoryBuffer(
             observations=[init_obs], actions=[], rewards=[], dones=[]
         )
-        self.hidden = None
 
     def update_trajectory_buffer(
         self, 
@@ -87,18 +92,23 @@ class DRQNAgent():
         next_obs: torch.Tensor,
         done: bool
     ):  
-        # Append experience to current episode buffer
+        """Updates the trajectory buffer with the passed experience passed. """
+        # Append experience to trajectory buffer
         self.buffer.actions.append(action)
         self.buffer.rewards.append(reward)
         self.buffer.observations.append(next_obs)
         self.buffer.dones.append(done)
 
-        # If experience was collected at the end of an episde, automatically
-        # transfer the current episode buffer to the replay memory.
+        # If experience was collected at last step of an episode, flush the 
+        # trajectory buffer automatically
         if done:
             self.flush_trajectory_buffer()
 
     def flush_trajectory_buffer(self):
+        """
+        Marks the end of an episode. Flushes the trajectory buffer to the 
+        agent's replay memory. Performs (possibly soft) target network update.
+        """
         if self.buffer:
             trajectory = Trajectory(
                 torch.stack([o for o in self.buffer.observations]),
@@ -123,11 +133,10 @@ class DRQNAgent():
 
     def act(self, obs: torch.Tensor, epsilon: float = 0) -> int:
         """
-        Returns action chosen using epsilon-greedy strategy. If epsilon is set
-        to zero, the action is chosen greedily w.r.t. the current q-network.
+        Returns action chosen using epsilon-greedy strategy and advances
+        internal hidden state. If epsilon is set to zero, the action is chosen
+        greedily w.r.t. the current q-network.
         """
-        # TODO: If the number of actions was stored once, the evaluation of 
-        # the q-network could be avoided for epsilon-greedy policies.
         q_vals, self.hidden = self.q_net(obs.unsqueeze(0), self.hidden)
         if random.uniform(0, 1) < epsilon:
             return random.randrange(0, q_vals.shape[1])
@@ -135,6 +144,9 @@ class DRQNAgent():
             return torch.argmax(q_vals).item()
 
     def train(self):
+        """
+        Performs single training step of the policy network. 
+        """
         if len(self.replay_memory) < self.batch_size:
             return None
 
@@ -142,22 +154,22 @@ class DRQNAgent():
         episodes = self.replay_memory.sample(self.batch_size)
 
         # Obtain batched obervations, actions, rewards, and done indicators
-        obs_batch = torch.stack([e.observations for e in episodes])
-        actions_batch = torch.stack([e.actions for e in episodes])
-        rewards_batch = torch.stack([e.rewards for e in episodes])
-        dones_batch = torch.stack([e.dones for e in episodes])
+        obs = torch.stack([e.observations for e in episodes])
+        actions = torch.stack([e.actions for e in episodes])
+        rewards = torch.stack([e.rewards for e in episodes])
+        dones = torch.stack([e.dones for e in episodes])
 
         # Compute action state values for all observations but the last in
         # the sequence
-        q_values, _ = self.q_net(obs_batch)
-        state_action_values = q_values[:,:-1,:].gather(2, actions_batch)
+        q_values = self.q_net(obs)[0][:,:-1,:]
+        state_action_values = q_values.gather(2, actions)
 
         # Compute expected state action values for those states
         next_state_values = torch.zeros_like(state_action_values)
-        target_q_values, _ = self.target_net(obs_batch)
-        target_next_state_values = target_q_values[:,:-1,:].max(2, True)[0].detach()
-        next_state_values[~dones_batch] = target_next_state_values[~dones_batch]
-        expected_state_action_values = self.gamma * next_state_values + rewards_batch
+        target_q_values = self.target_net(obs)[0][:,:-1,:]
+        target_next_state_values = target_q_values.max(2, True)[0].detach()
+        next_state_values[~dones] = target_next_state_values[~dones]
+        expected_state_action_values = self.gamma * next_state_values + rewards
 
         # Compute loss
         criterion = nn.SmoothL1Loss()
