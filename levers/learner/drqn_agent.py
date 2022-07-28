@@ -70,7 +70,7 @@ class DRQNAgent():
         # Initialize optimizer for RQ-network
         # (the learned parameters are frequently copied to the target network)
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
-        self.gamma = 1.0
+        self.gamma = gamma
 
         # Internal hidden states used for acting
         self.hidden=None
@@ -143,7 +143,7 @@ class DRQNAgent():
         else:
             return torch.argmax(q_vals).item()
 
-    def train(self):
+    def train(self) -> float:
         """
         Performs single training step of the policy network. 
         """
