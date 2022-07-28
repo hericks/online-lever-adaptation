@@ -8,6 +8,7 @@ from levers.learner import DRQNAgent, DRQNetwork
 
 
 TRUNCATED_LEN = 25
+NUM_EPISODES=1000
 
 # Initialize environment
 env = IteratedLeverEnvironment(
@@ -33,7 +34,6 @@ learner = DRQNAgent(
     tau=5e-4
 )
 
-NUM_EPISODES=1000
 for episode in range(NUM_EPISODES):
     # Reset environment and learner's hidden state, and episode stats
     obs = env.reset()
