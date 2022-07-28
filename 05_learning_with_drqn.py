@@ -35,27 +35,27 @@ learner = DRQNAgent(
 )
 
 for episode in range(NUM_EPISODES):
-    # Reset environment and learner's hidden state, and episode stats
+    # Reset environment and learner's hidden state and trajectory buffy
     obs = env.reset()
     learner.reset_trajectory_buffer(init_obs=obs)
+    episode_return = 0
 
     # Step through environment
-    # NOTE: To simulate open-ended environment, we reset the environment after
-    # TRUNCATED_LEN steps
-    episode_return = 0
+    # NOTE: To simulate open-ended environment, 
+    #       we reset the environment after TRUNCATED_LEN steps
     for step in range(TRUNCATED_LEN):
-        # Obtain action from learner and advance internal (hidden) state
+        # Obtain action from learner and advance internal hidden state
         eps=0.3*max(0, 1 - 2*(episode + 1) / NUM_EPISODES)
         action = learner.act(obs, epsilon=eps)
         # Take step in environment
         next_obs, reward, done = env.step(action)
-        # Add to learners internal memory
+        # Add experience to learners trajectory buffer
         learner.update_trajectory_buffer(action, reward, next_obs, done)
         episode_return += reward
         # Update next observation -> observation
         obs = next_obs
 
-    # Give experience of past episode to learner and train
+    # Flush experience to replay memory and train
     learner.flush_trajectory_buffer()
     loss = learner.train()
 
