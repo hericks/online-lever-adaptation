@@ -24,7 +24,7 @@ test_patterns = [
 train_patterns = [
     pattern for pattern in len3_patterns if pattern not in test_patterns]
 
-# Learner setting
+# Learner settings
 hidden_size = 4
 capacity = 8
 batch_size = 4
@@ -55,7 +55,7 @@ test_envs = [
 learner = DRQNAgent(
     DRQNetwork(
         input_size=len(train_envs[0].dummy_obs()),
-        hidden_size=4,
+        hidden_size=hidden_size,
         n_actions=train_envs[0].n_actions()),
     capacity, batch_size, lr, gamma, len_update_cycle, tau
 )
@@ -80,7 +80,7 @@ for episode in range(num_episodes):
     learner.flush_trajectory_buffer()
     loss = learner.train()
 
-    if (episode + 1) % 50 == 0:
+    if (episode + 1) % 25 == 0:
         print('Episode: {episode:4d} | Loss: {loss:2.3f} | Return: {ret:3.0f}'.format(
             episode=episode+1,
             loss=loss if loss else -1.,
@@ -103,14 +103,12 @@ for name, envs in eval_envs.items():
         greedy_pattern = ''
         ret = 0
         obs = env.reset()
-        learner.reset_trajectory_buffer(init_obs=obs)
 
         for step in range(truncated_length):
             action = learner.act(obs)
             greedy_pattern += str(action)
             next_obs, reward, done = env.step(action)
             ret += reward
-            learner.update_trajectory_buffer(action, reward, next_obs, done)
             obs = next_obs 
 
         print('Greedy :', greedy_pattern)
