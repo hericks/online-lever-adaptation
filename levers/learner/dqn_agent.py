@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 import random
-from typing import List
+from typing import List, Tuple
 
 import torch
 import torch.nn as nn
@@ -81,18 +81,20 @@ class DQNAgent():
         self.target_net = deepcopy(self.q_net)
         self.n_rounds_since_update = 0
 
-    def act(self, obs: torch.Tensor, epsilon: float = 0) -> int:
+    def act(self, obs: torch.Tensor, epsilon: float = 0) -> Tuple[int, bool]:
         """
-        Returns action chosen using epsilon-greedy strategy. If epsilon is set
-        to zero, the action is chosen greedily w.r.t. the current q-network.
+        Returns action chosen using epsilon-greedy strategy and boolean flag
+        indicating whether the action was chosen greedily (True for greedy
+        action, False for random action). If epsilon is set to zero, the action
+        is chosen greedily w.r.t. the current q-network.
         """
         # TODO: If the number of actions was stored once, the evaluation of 
         # the q-network could be avoided for epsilon-greedy policies.
         q_vals = self.q_net(obs)
         if random.uniform(0, 1) < epsilon:
-            return random.randrange(0, len(q_vals))
+            return random.randrange(0, len(q_vals)), False
         else:
-            return torch.argmax(q_vals).item()
+            return torch.argmax(q_vals).item(), True
 
     def update_memory(self, transition: Transition):
         """Updates the learners experience. """
