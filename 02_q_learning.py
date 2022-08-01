@@ -34,7 +34,7 @@ for episode in range(200):
     # Step through environment
     while not done:
         # Obtain action from learner
-        action = learner.act(obs, epsilon=0.5)
+        action, _ = learner.act(obs, epsilon=0.5)
         # Take step in environment
         next_obs, reward, done = env.step(action)
         # Give experience to learner and train

@@ -29,7 +29,7 @@ def eval_learner(
         # Step through environment
         while not done:
             # Obtain action from learner
-            action = learner.act(obs, epsilon=0.3)
+            action, _ = learner.act(obs, epsilon=0.3)
             # Take step in environment
             next_obs, reward, done = env.step(action)
             cumulative_reward += reward
