@@ -15,4 +15,4 @@ module load cuDNN/8.2.1.32-CUDA-11.3.1
 # Load conda environment
 source activate $HOME/.conda/envs/torch
 
-python3 -u online_qlearner_length3.py
+python3 -u online_qlearner_all_length3.py
