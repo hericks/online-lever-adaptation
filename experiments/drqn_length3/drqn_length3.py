@@ -7,7 +7,9 @@ from levers import IteratedLeverEnvironment
 from levers.partners import FixedPatternPartner
 from levers.learner import DRQNAgent, DRQNetwork
 
+import pickle
 import random
+import itertools
 
 
 # Environment settings
@@ -15,14 +17,6 @@ payoffs = [1., 1.]
 truncated_length = 100
 include_step=False
 include_payoffs=False
-
-len3_patterns = [
-    [0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1],
-    [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1],]
-test_patterns = [
-    [0, 0, 0], [0, 1, 0], [1, 0, 1], [1, 1, 1],]
-train_patterns = [
-    pattern for pattern in len3_patterns if pattern not in test_patterns]
 
 # Learner settings
 hidden_size = 4
@@ -37,79 +31,91 @@ tau = 5e-4
 num_episodes = 1000
 epsilon = 0.3
 
-# Construct list of environments to train and test on
-train_envs = [
-    IteratedLeverEnvironment(
-        payoffs, truncated_length+1, FixedPatternPartner(pattern),
-        include_step, include_payoffs)
-    for pattern in train_patterns
-]
-test_envs = [
-    IteratedLeverEnvironment(
-        payoffs, truncated_length+1, FixedPatternPartner(pattern),
-        include_step, include_payoffs)
-    for pattern in test_patterns
+# 
+n_evaluations = 10
+
+# Patterns
+patterns = [
+    (0, 0, 0), (0, 0, 1), (0, 1, 0), (0, 1, 1),
+    (1, 0, 0), (1, 0, 1), (1, 1, 0), (1, 1, 1),
 ]
 
-# Construct DRQN agent
-learner = DRQNAgent(
-    DRQNetwork(
-        input_size=len(train_envs[0].dummy_obs()),
-        hidden_size=hidden_size,
-        n_actions=train_envs[0].n_actions()),
-    capacity, batch_size, lr, gamma, len_update_cycle, tau
-)
 
-# Train agent
-for episode in range(num_episodes):
-    # Sample reset environment from training environments
-    env = random.sample(train_envs, 1)[0]
-    obs = env.reset()
-    learner.reset_trajectory_buffer(init_obs=obs)
-    episode_return = 0
+results = {}
+for train_patterns in itertools.combinations(patterns, 4):
+    print(f'TRAIN-PATTERN: {train_patterns}')
 
-    # Step through environment
-    for step in range(truncated_length):
-        action = learner.act(obs, epsilon)
-        next_obs, reward, done = env.step(action)
-        episode_return += reward
-        learner.update_trajectory_buffer(action, reward, next_obs, done)
-        obs = next_obs 
+    # Construct test pattern from train pattern
+    test_patterns = tuple(p for p in patterns if p not in train_patterns)
 
-    # Flush experience to replay memory and train learner
-    learner.flush_trajectory_buffer()
-    loss = learner.train()
+    # Construct list of environments to train on
+    train_envs = [
+        IteratedLeverEnvironment(
+            payoffs, truncated_length+1, FixedPatternPartner(list(pattern)),
+            include_step, include_payoffs)
+        for pattern in train_patterns
+    ]
 
-    if (episode + 1) % 25 == 0:
-        print('Episode: {episode:4d} | Loss: {loss:2.3f} | Return: {ret:3.0f}'.format(
-            episode=episode+1,
-            loss=loss if loss else -1.,
-            ret=episode_return,
-        ))
+    # Setup temporary results dict
+    train_patterns_results = {}
+    for pattern in patterns:
+        train_patterns_results[pattern] = []
 
-# Evaluate agent
-eval_envs = {'TRAINING': train_envs, 'TEST': test_envs}
-for name, envs in eval_envs.items():
-    print("-" * 100)
-    print(name)
-    for env in envs:
-        print("Environment:", env.partner.pattern)
+    # Fill temporary results dict
+    for i in range(n_evaluations):
+        print(f'-> evaluation: {i+1} / {n_evaluations}')
 
-        optimal_pattern = ''
-        for step in range(truncated_length):
-            optimal_pattern += str(env.partner.pattern[step % 3])
-        print('Optimal:', optimal_pattern)
+        # Reset learner
+        learner = DRQNAgent(
+            DRQNetwork(
+                input_size=len(train_envs[0].dummy_obs()),
+                hidden_size=hidden_size,
+                n_actions=train_envs[0].n_actions()),
+            capacity, batch_size, lr, gamma, len_update_cycle, tau
+        )
 
-        greedy_pattern = ''
-        ret = 0
-        obs = env.reset()
+        # Train learner
+        for episode in range(num_episodes):
+            # Sample reset environment from training environments
+            env = random.sample(train_envs, 1)[0]
+            obs = env.reset()
+            learner.reset_trajectory_buffer(init_obs=obs)
 
-        for step in range(truncated_length):
-            action = learner.act(obs)
-            greedy_pattern += str(action)
-            next_obs, reward, done = env.step(action)
-            ret += reward
-            obs = next_obs 
+            # Step through environment
+            for step in range(truncated_length):
+                action = learner.act(obs, epsilon)
+                next_obs, reward, done = env.step(action)
+                learner.update_trajectory_buffer(action, reward, next_obs, done)
+                obs = next_obs 
 
-        print('Greedy :', greedy_pattern)
-        print(f'Reward: {ret:3.0f} ({ret / truncated_length * 100:6.2f}%)\n')
+            # Flush experience to replay memory and train learner
+            learner.flush_trajectory_buffer()
+            learner.train()
+
+        # Evaluate learner on each possible partner pattern
+        for pattern in patterns:
+            eval_env = IteratedLeverEnvironment(
+                payoffs, truncated_length+1, FixedPatternPartner(list(pattern)),
+                include_step, include_payoffs)
+
+            ret = 0
+            obs = eval_env.reset()
+            for step in range(truncated_length):
+                action = learner.act(obs)
+                next_obs, reward, done = eval_env.step(action)
+                ret += reward
+                obs = next_obs 
+
+            train_patterns_results[pattern].append(ret)
+
+    print("Results:")
+    for pattern in patterns:
+        print(f'-> pattern: {pattern}, returns: {train_patterns_results[pattern]}')
+    print('')
+
+    # Flush current result and save to disk
+    results[train_patterns] = train_patterns_results
+    data_folder = path.join(path.dirname(__file__), 'data')
+    out_file = open(path.join(data_folder, 'results.pkl'), 'wb')
+    pickle.dump(results, out_file)
+    out_file.close()
