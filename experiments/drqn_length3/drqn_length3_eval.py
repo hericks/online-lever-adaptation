@@ -1,7 +1,9 @@
 import numpy as np
 import pickle
+import os
 
-results_file = open('experiments/drqn_all_length3/data/results.pkl', 'rb')
+
+results_file = open('drqn_length3/data/results.pkl', 'rb')
 results = pickle.load(results_file)
 results_file.close()
 
