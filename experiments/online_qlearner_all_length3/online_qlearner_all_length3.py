@@ -136,8 +136,8 @@ def batch_eval_train_patterns(train_patterns, n_evals, data_folder):
     """
     for eval_id in range(n_evals):
         # Define output locations
-        q_net_out_path = path.join(data_folder, f'qnet-pattern={train_patterns}-eval_id={eval_id}.pt')
-        hs_net_out_path = path.join(data_folder, f'qnet-pattern={train_patterns}-eval_id={eval_id}.pt')
+        q_net_out_path = path.join(data_folder, f'q-net-pattern={train_patterns}-eval_id={eval_id}.pt')
+        hs_net_out_path = path.join(data_folder, f'hs-net-pattern={train_patterns}-eval_id={eval_id}.pt')
 
         if path.isfile(q_net_out_path):
             print(f'-> evaluation {eval_id}: ALREADY EXISTS')
