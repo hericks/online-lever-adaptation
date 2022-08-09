@@ -103,7 +103,7 @@ class IteratedLeverEnvironment:
         if self.partner:
             return player_obs
         else:
-            return torch.stack(player_obs, partner_obs)
+            return torch.stack((player_obs, partner_obs))
 
     def _is_done(self) -> bool:
         """Returns whether the environment is in a terminal state."""
