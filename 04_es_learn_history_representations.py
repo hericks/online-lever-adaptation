@@ -49,7 +49,6 @@ def eval_learner(
             )
             learner.train(done)
             # Update next observation -> observation
-            obs = next_obs
             obs_rep = next_obs_rep
             hidden = next_hidden
 
