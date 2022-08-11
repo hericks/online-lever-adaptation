@@ -49,8 +49,8 @@ l1.q_net.load_state_dict(torch.load(path.join(models_dir, 'q' + model_name1)))
 l1.reset()
 
 model_name2 = '-net-pattern=((0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 1, 1))-eval_id=00.pt'
-hs2.net.load_state_dict(torch.load(path.join(models_dir, 'hs' + model_name1)))
-l2.q_net.load_state_dict(torch.load(path.join(models_dir, 'q' + model_name1)))
+hs2.net.load_state_dict(torch.load(path.join(models_dir, 'hs' + model_name2)))
+l2.q_net.load_state_dict(torch.load(path.join(models_dir, 'q' + model_name2)))
 l2.reset()
 
 # Reset environment
