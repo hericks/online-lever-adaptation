@@ -60,25 +60,25 @@ obs1 = joint_obs[0,]
 obs_rep1, hidden1 = hs1.net(obs1.unsqueeze(0))
 
 obs2 = joint_obs[1,]
-obs_rep2, hidden2 = hs2.net(obs1.unsqueeze(0))
+obs_rep2, hidden2 = hs2.net(obs2.unsqueeze(0))
 
 # Step through environment
 for step in range(n_iterations):
     # Obtain action from learners
     epsilon = 0.2 * max(0, 1 - 2 * step / n_iterations)
     action1, _ = l1.act(obs_rep1.squeeze(0), epsilon=epsilon)
-    action2, _ = l1.act(obs_rep2.squeeze(0), epsilon=epsilon)
+    action2, _ = l2.act(obs_rep2.squeeze(0), epsilon=epsilon)
 
     # Take step in environment
     joint_next_obs, reward, done = env.step([action1, action2])
-    next_obs1 = joint_next_obs[0]
-    next_obs2 = joint_next_obs[1]
+    next_obs1 = joint_next_obs[0,]
+    next_obs2 = joint_next_obs[1,]
 
     # Compute history representation
     next_obs_rep1, next_hidden1 = hs1.net(next_obs1.unsqueeze(0), hidden1)
     next_obs_rep2, next_hidden2 = hs2.net(next_obs2.unsqueeze(0), hidden2)
 
-    # Give experience to learner and train
+    # Give experience to learners and train
     l1.update_memory(
         Transition(
             obs_rep1.squeeze(0).detach(),
