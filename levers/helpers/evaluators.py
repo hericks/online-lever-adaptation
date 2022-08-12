@@ -52,14 +52,14 @@ def train_drqn_agent(
 def eval_drqn_agent(
     agent: DRQNAgent,
     envs: List[IteratedLeverEnvironment],
-    bootstrap_last_step=False,
+    bootstrap_last_step: bool = False,
 ):
     """
     Note: All the environments in `env` should have the same episode length.
     """
     eval_stats = {
         'actions': torch.zeros((len(envs), envs[0].episode_length-1)),
-        'rewards': torch.zeros((len(envs), envs[0].episode_length-1))
+        'rewards': torch.zeros((len(envs), envs[0].episode_length-1)),
     }
     for env_id, env in enumerate(envs):
         # Reset environment and DRQN's hidden state
@@ -82,5 +82,26 @@ def eval_drqn_agent(
                     raise NameError('Episode done before reaching bootstrap step')
         else:
             raise NotImplementedError()
+
+    return eval_stats
+
+def eval_drqn_agents(
+    agents: List[DRQNAgent],
+    envs: List[IteratedLeverEnvironment],
+    bootstrap_last_step: bool = False
+):
+    """
+    """
+    out_shape = (len(agents), len(envs), envs[0].episode_length-1)
+    eval_stats = {
+        'actions': torch.zeros(out_shape),
+        'rewards': torch.zeros(out_shape),
+    }
+
+    # Evaluate each agent and save corresponding stats
+    for agent_id, agent in enumerate(agents):
+        agent_results = eval_drqn_agent(agent, envs, bootstrap_last_step)
+        eval_stats['actions'][agent_id,:,:] = agent_results['actions']
+        eval_stats['rewards'][agent_id,:,:] = agent_results['rewards']
 
     return eval_stats
