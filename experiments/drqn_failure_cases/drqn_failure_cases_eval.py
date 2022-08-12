@@ -29,8 +29,7 @@ gamma = 0.99
 len_update_cycle = 4
 tau = 5e-4
 
-# Evaluation settings
-n_evaluations = 2
+n_train_evals = 10
 
 # Model settings
 models_dir = 'experiments/drqn_failure_cases/models'
@@ -73,7 +72,7 @@ eval_envs = [
 for train_patterns_id, train_patterns in enumerate(list(itertools.combinations(patterns, 4))):
     print(f'TRAIN-PATTERNS ({train_patterns_id+1:2d}/70): {train_patterns}')
 
-    # Initialize new agent
+    # Initialize DRQN agent
     agent = DRQNAgent(
         DRQNetwork(
             input_size=len(eval_envs[0].dummy_obs()),
@@ -83,14 +82,14 @@ for train_patterns_id, train_patterns in enumerate(list(itertools.combinations(p
         capacity, batch_size, lr, gamma, len_update_cycle, tau
     )
 
-    for train_id in range(10):
-        # Load agent's q network
+    # Load agents' q networks 
+    for agent_id in range(n_train_evals):
         in_path = os.path.join(models_dir, model_name_template.format(
             train_patterns=train_patterns,
-            eval_id=train_id,
+            eval_id=agent_id,
         ))
         agent.q_net =torch.load(in_path)
 
         # Evaluate agent
         res = eval_drqn_agent(agent, eval_envs, True)
-        print(res['rewards'].sum(dim=1))
+        print(res['rewards'].sum(dim=-1))
