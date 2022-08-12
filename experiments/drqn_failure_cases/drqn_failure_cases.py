@@ -37,9 +37,10 @@ epsilon = 0.3
 n_evaluations = 10
 
 # Model settings
-models_dir = 'experiments/drqn_failure_cases/models'
-model_name_template = 'drqn-net-patterns={train_patterns}-eval-id={eval_id:02d}.pt'
+models_dir = 'models'
+model_name_template = 'drqn-net-train-patterns={train_patterns}-eval-id={eval_id:02d}.pt'
 
+print(os.getcwd())
 
 class DRQNetwork(nn.Module):
 
