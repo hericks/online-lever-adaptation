@@ -20,6 +20,10 @@ def train_drqn_agent(
     `n_episodes` episodes with exploration probability `epsilon`. Training 
     bootstraps into the last step to simulate 
     """
+    train_stats = {
+        'episode': [],
+        'loss': [],
+    }
     for episode in range(n_episodes):
         # Sample and reset environment from training environments
         env = random.sample(envs, 1)[0]
@@ -47,7 +51,13 @@ def train_drqn_agent(
 
         # Flush experience to replay memory and train learner
         agent.flush_trajectory_buffer()
-        agent.train()
+        loss = agent.train()
+
+        # Fill train stats
+        train_stats['episode'].append(episode)
+        train_stats['loss'].append(loss)
+
+    return train_stats
 
 def eval_drqn_agent(
     agent: DRQNAgent,
