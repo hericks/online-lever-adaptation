@@ -3,16 +3,21 @@ import sys
 import os
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
-import torch
-import torch.nn as nn
-
 from levers import IteratedLeverEnvironment
 from levers.partners import FixedPatternPartner
 from levers.learner import DRQNAgent
 from levers.helpers import train_drqn_agent, generate_binary_patterns
 
 import itertools
+import random
+import torch
+import torch.nn as nn
 
+
+# Reproducibility
+seed = 42
+torch.manual_seed(seed)
+random.seed(seed)
 
 # Environment settings
 payoffs = [1., 1.]
