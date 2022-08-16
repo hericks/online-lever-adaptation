@@ -9,7 +9,7 @@ import torch.nn as nn
 from levers import IteratedLeverEnvironment
 from levers.partners import FixedPatternPartner
 from levers.learner import DRQNAgent
-from levers.helpers import eval_drqn_agent, generate_binary_patterns
+from levers.helpers import eval_drqn_agents, generate_binary_patterns
 
 import itertools
 
@@ -62,25 +62,30 @@ class DRQNetwork(nn.Module):
 patterns = generate_binary_patterns(3)
 
 # Construct list of environments to evaluate DRQN agent in
+eval_patterns = [(0, 0, 0)]
 eval_envs = [
     IteratedLeverEnvironment(
         payoffs, truncated_length+1, FixedPatternPartner(list(pattern)),
         include_step, include_payoffs)
-    for pattern in patterns
+    for pattern in eval_patterns
 ]
 
+total_res = {}
 for train_patterns_id, train_patterns in enumerate(list(itertools.combinations(patterns, 4))):
     print(f'TRAIN-PATTERNS ({train_patterns_id+1:2d}/70): {train_patterns}')
 
-    # Initialize DRQN agent
-    agent = DRQNAgent(
-        DRQNetwork(
-            input_size=len(eval_envs[0].dummy_obs()),
-            hidden_size=hidden_size,
-            n_actions=eval_envs[0].n_actions()
-        ),
-        capacity, batch_size, lr, gamma, len_update_cycle, tau
-    )
+    # Initialize and load DRQN agents
+    agents = [
+        DRQNAgent(
+            DRQNetwork(
+                input_size=len(eval_envs[0].dummy_obs()),
+                hidden_size=hidden_size,
+                n_actions=eval_envs[0].n_actions()
+            ),
+            capacity, batch_size, lr, gamma, len_update_cycle, tau
+        )
+        for agent_id in range(n_train_evals)
+    ]
 
     # Load agents' q networks 
     for agent_id in range(n_train_evals):
@@ -88,8 +93,22 @@ for train_patterns_id, train_patterns in enumerate(list(itertools.combinations(p
             train_patterns=train_patterns,
             eval_id=agent_id,
         ))
-        agent.q_net =torch.load(in_path)
+        agents[agent_id].q_net =torch.load(in_path)
 
-        # Evaluate agent
-        res = eval_drqn_agent(agent, eval_envs, True)
-        print(res['rewards'].sum(dim=-1))
+    # Evaluate agent
+    res = eval_drqn_agents(agents, eval_envs, True)
+    total_res[train_patterns] = res['rewards'].sum(dim=(0, 2)).item()
+
+total_res_view = [(value, sum([sum(pattern) for pattern in train_pattern]), train_pattern) for train_pattern, value in total_res.items()]
+total_res_view.sort(reverse=True)
+
+print('\n\n' + '-' * 100)
+for ret, n_ones, train_pattern in total_res_view:
+    print(f'{train_pattern} : ({n_ones:2d}) : {ret:5.2f}')
+
+import matplotlib.pyplot as plt
+
+plt.subplot(1, 1, 1)
+plt.scatter([n_ones for _, n_ones, _ in total_res_view], [ret for ret, _, _ in total_res_view])
+plt.savefig('my_test.png')
+plt.close()
