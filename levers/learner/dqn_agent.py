@@ -8,6 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 from .replay_memory import Transition, ReplayMemory
+from .utils import polyak_update
 
 
 # TODO: Should the optimizer be passed as a parameter?
@@ -22,6 +23,7 @@ class DQNAgent():
         capacity: int,
         batch_size: int,
         lr: float,
+        tau: float = 1.0,
         gamma: float = 1.0,
         len_update_cycle: int = 10
     ):
@@ -38,29 +40,33 @@ class DQNAgent():
                 batch size to sample from the replay memory
             lr (float):
                 learning rate
+            tau (float):
+                coefficient used for (soft) polyak update
+                (tau = 1 equals a hard update)
             gamma (float):
                 discount factor
             update_target_every (int):
-                the number of rounds between two target updates
+                the number of episodes between two target updates
                 (=0,1 -> back-to-back updates)
         """
         # Set q- and target-network (equal at first)
         self.q_net = q_net
         self.target_net = deepcopy(q_net)
 
-        # Save how frequently the target network should be updated
-        self.n_rounds_since_update = 0
+        # Parameters specifying the target network updates
+        self.tau = tau
+        self.n_steps_since_update = 0
         self.len_update_cycle = len_update_cycle
 
         # Initialize the replay memory and batch size used for updates
         self.memory = ReplayMemory(capacity)
         self.batch_size = batch_size
+
         # Initialize optimizer for Q-network
         # (the learned parameters are frequently copied to the target network)
-        self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
         self.gamma = gamma
-        # Save initial learning rate for later agent resets
         self.lr = lr
+        self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
 
     def reset(self, params: List = None):
         """
@@ -70,16 +76,19 @@ class DQNAgent():
         """
         # Reset experience replay
         self.memory = ReplayMemory(self.memory.memory.maxlen)
+
         # If desired, reset policy network
         if params:
             with torch.no_grad():
                 for i, param in enumerate(self.q_net.parameters()):
                     param.set_(params[i].clone().detach())
-        # Reset q-learning optimizer
+
+        # Reset optimizer
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=self.lr)
+
         # Reset target network
-        self.target_net = deepcopy(self.q_net)
-        self.n_rounds_since_update = 0
+        self.target_net.load_state_dict(self.q_net.state_dict())
+        self.n_steps_since_update = 0
 
     def act(self, obs: torch.Tensor, epsilon: float = 0) -> Tuple[int, bool]:
         """
@@ -100,15 +109,17 @@ class DQNAgent():
         """Updates the learners experience. """
         self.memory.push(transition)
 
-    def train(self, done: bool):
+    def train(self) -> float:
         """
-        Pushes transition to the experience replay and performs a single 
-        training step. The parameter indicating a terminal state is used to
-        termine when to update the learner's target network.
+        Performs a single training step if the agent's experience replay is
+        sufficiently filled.
+        
+        Returns the current training loss if a training step was taken, -1 
+        otherwise.
         """
         # Perform training step only if experience replay is sufficiently filled
         if len(self.memory) < self.batch_size:
-            return
+            return -1.0
 
         # Obtain batch of samples and convert to stacked tensors
         transitions = self.memory.sample(self.batch_size)
@@ -133,15 +144,19 @@ class DQNAgent():
         loss = criterion(state_action_vals, expected_state_action_vals)
 
         # Optimize model
+        # TODO: Should the gradient be clamped?
         self.optim.zero_grad()
         loss.backward()
-        # TODO: Should the gradient be clamped?
         self.optim.step()
 
-        # Update the target model if necessary
-        if done:
-            self.n_rounds_since_update += 1
+        # Update target network if necessary
+        self.n_steps_since_update += 1
+        if self.n_steps_since_update >= self.len_update_cycle:
+            polyak_update(
+                params=self.q_net.parameters(),
+                target_params=self.target_net.parameters(),     
+                tau=self.tau,
+            )
+            self.n_steps_since_update = 0
 
-        if self.n_rounds_since_update >= self.len_update_cycle:
-            self.target_net.load_state_dict(self.q_net.state_dict())
-            self.n_rounds_since_update = 0
+        return loss.item()
