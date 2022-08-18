@@ -1,3 +1,5 @@
+import random
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -6,6 +8,11 @@ from levers import IteratedLeverEnvironment
 from levers.partners import FixedPatternPartner
 from levers.learner import DQNAgent, Transition
 
+
+# Reproducibility
+seed = 0
+random.seed(seed)
+torch.manual_seed(seed)
 
 # Initialize environment
 env = IteratedLeverEnvironment(
@@ -23,7 +30,9 @@ learner = DQNAgent(
     ),
     capacity=16,
     batch_size=8,
-    lr=0.005
+    lr=0.005,
+    tau=1,
+    len_update_cycle=2*10,
 )
 
 for episode in range(200):
@@ -39,7 +48,7 @@ for episode in range(200):
         next_obs, reward, done = env.step(action)
         # Give experience to learner and train
         learner.update_memory(Transition(obs, action, next_obs, reward, done))
-        learner.train(done)
+        learner.train()
         # Update next observation -> observation
         obs = next_obs
 
