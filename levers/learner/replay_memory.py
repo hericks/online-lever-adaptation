@@ -1,4 +1,5 @@
 from typing import NamedTuple, Union, List
+from dataclasses import dataclass
 from collections import deque
 
 import random
@@ -18,6 +19,14 @@ class Trajectory(NamedTuple):
     actions: torch.Tensor
     rewards: torch.Tensor
     dones: torch.Tensor
+
+
+@dataclass
+class TrajectoryBuffer:
+    observations: List[torch.Tensor]
+    actions: List[int]
+    rewards: List[float]
+    dones: List[bool]
 
 
 class ReplayMemory():
