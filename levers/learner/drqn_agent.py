@@ -166,7 +166,7 @@ class DRQNAgent():
 
         # Compute expected state action values for those states
         next_state_values = torch.zeros_like(state_action_values)
-        target_q_values = self.target_net(obs)[0][:,:-1,:]
+        target_q_values = self.target_net(obs)[0][:,1:,:]
         target_next_state_values = target_q_values.max(2, True)[0].detach()
         next_state_values[~dones] = target_next_state_values[~dones]
         expected_state_action_values = self.gamma * next_state_values + rewards
