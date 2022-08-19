@@ -10,13 +10,14 @@ from levers.partners import FixedPatternPartner
 from levers.learner import DRQNAgent, DRQNetwork
 
 
-torch.set_printoptions(precision=2)
 
 # Reproducibility
 seed = 0
 random.seed(seed)
 torch.manual_seed(seed)
 
+# Misc
+torch.set_printoptions(precision=2)
 
 # Initialize environment
 env = IteratedLeverEnvironment(
