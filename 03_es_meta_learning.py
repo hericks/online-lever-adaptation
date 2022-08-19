@@ -1,24 +1,38 @@
 from typing import List, Dict
 
+import random
+import numpy as np
+
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+
+from torch.nn.utils import vector_to_parameters, parameters_to_vector
+
+from evotorch import Problem
+from evotorch.logging import StdOutLogger
 
 from levers import IteratedLeverEnvironment
 from levers.partners import FixedPatternPartner
-from levers.learner import OpenES, DQNAgent, Transition
+from levers.learner import DQNAgent, Transition
+from levers.learner.open_es import OpenES
 
 
 def eval_learner(
+    param_vec: torch.Tensor,
     learner: DQNAgent,
     env: IteratedLeverEnvironment,
-    n_episodes: int = 1
+    n_episodes: int,
 ):
     """
     Evaluates the q-learning DQN-Agent `learner` in the environment `env`
     by rolling out `n_episodes` episodes. Cumulative reward serves as measure
     of fitness.
     """
+    # Load learner's state
+    vector_to_parameters(param_vec, learner.q_net.parameters())
+    learner.target_net.load_state_dict(learner.q_net.state_dict())
+    learner.reset()
+
     # Evaluate learners fitness
     cumulative_reward = 0
     for episode in range(n_episodes):
@@ -34,34 +48,20 @@ def eval_learner(
             next_obs, reward, done = env.step(action)
             cumulative_reward += reward
             # Give experience to learner and train
-            learner.update_memory(Transition(obs, action, next_obs, reward, done))
-            learner.train(done)
+            transition = Transition(obs, action, next_obs, reward, done)
+            learner.update_memory(transition)
+            learner.train()
             # Update next observation -> observation
             obs = next_obs
 
     return cumulative_reward
 
 
-def eval_population(
-    population: Dict[str, List[DQNAgent]],
-    env: IteratedLeverEnvironment,
-    n_episodes: int = 1
-):
-    """
-    Evaluates the list of parameters for a q-learning DQN-Agent `population`
-    in the environment `env` by rolling out `n_episodes` episodes.
-    Cumulative reward serves as measure of fitness.
-    """
-    population_fitness = []
-    for member in population:
-        # Populate learner with proposal params
-        learner.reset(member['q_net'])
-        # Evaluate learner and save fitness
-        fitness = eval_learner(learner, env, n_episodes)
-        population_fitness.append(fitness)
-
-    return population_fitness
-
+# Reproducibility
+seed = 42
+random.seed(seed)
+torch.manual_seed(seed)
+np.random.seed(seed)
 
 # Initialize environment
 env = IteratedLeverEnvironment(
@@ -80,48 +80,29 @@ learner = DQNAgent(
     ),
     capacity=16,
     batch_size=8,
-    lr=0.01
+    lr=0.01,
+    tau=1.0,
+    len_update_cycle=10*env.episode_length,
 )
 
-# Initialize evolution strategy
-es_strategy = OpenES(
-    pop_size=50, 
-    sigma_init=0.1, sigma_decay=0.999, sigma_limit=0.01, 
-    optim_lr=0.05,
-    optim_maximize=True,
+# Initialize ES problem and algorithm
+problem = Problem(
+    'max',
+    lambda param_vec: eval_learner(param_vec, learner, env, 10),
+    solution_length=sum(p.numel() for p in learner.q_net.parameters()),
+    initial_bounds=(-1, 1),
+    num_actors='max'
+)
+searcher = OpenES(
+    problem,
+    popsize=50,
+    learning_rate=0.1,
+    stdev_init=0.5,
+    stdev_decay=0.99,
+    stdev_min=0.1,
+    mean_init=parameters_to_vector(learner.q_net.parameters())
 )
 
-# Further settings
-n_es_epochs = 50
-n_q_learning_episodes = 10
-print_every_k = 1
-
-# Reset strategy and perform evolve using Ask-Eval-Tell loop
-es_strategy.reset({'q_net': learner.q_net.parameters()})
-for es_epoch in range(n_es_epochs):
-    # Ask for proposal population
-    population = es_strategy.ask()
-    # Evaluate population
-    population_fitness = eval_population(population, env, n_q_learning_episodes)
-    # Tell (update)
-    mean = es_strategy.tell(population_fitness)
-
-    if (es_epoch + 1) % print_every_k == 0:
-        learner.reset(mean['q_net'])
-        observations = [
-            torch.tensor([0., 0., 0., 0.]),
-            torch.tensor([1., 1., 0., 0.]),
-            torch.tensor([2., 0., 1., 0.]),
-            torch.tensor([3., 0., 0., 1.]),
-            torch.tensor([4., 1., 0., 0.]),
-            torch.tensor([5., 0., 1., 0.]),
-        ]
-        greedy_pattern = [
-            torch.argmax(learner.q_net(obs)).item() for obs in observations]
-        print('ES-EPOCH: {epoch:2d} | REWARD (MIN/MEAN/MAX): {min:.2f}, {mean:.2f}, {max:.2f} | GREEDY-PATTERN: {pattern}'.format(
-            epoch=es_epoch+1, 
-            min=min(population_fitness),
-            mean=sum(population_fitness) / es_strategy.pop_size,
-            max=max(population_fitness),
-            pattern=greedy_pattern
-        ))
+# Attach logger to ES algorithm and run
+logger = StdOutLogger(searcher)
+searcher.run(100)
