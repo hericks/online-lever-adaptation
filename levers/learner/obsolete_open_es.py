@@ -48,6 +48,8 @@ class OpenES:
         """
         Reset strategy to train parameters similar to those stored in the
         values of `parametersets`.
+
+        NOTE: The parameters in `params_dict` are cloned.
         """
         # Reset current value of sigma
         self.sigma = self.sigma_init
@@ -66,9 +68,9 @@ class OpenES:
             param for params in self.means_dict.values() for param in params]
         self.optim = optim.Adam(vars, lr=self.lr)
 
-    def ask(self) -> Dict[str, List[torch.Tensor]]:
+    def ask(self) -> List[Dict[str, List[torch.Tensor]]]:
         """
-        Returns list of proposed parameter lists.
+        Returns list of proposed parameter dicts.
         """
         # Antithetic sampling of noise
         self.population = []
