@@ -9,7 +9,9 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from levers.learner.replay_memory import ReplayMemory, Trajectory
+from levers.learner.replay_memory import (
+    ReplayMemory, Trajectory, TrajectoryBuffer
+)
 
 
 class DRQNetwork(nn.Module):
@@ -29,14 +31,6 @@ class DRQNetwork(nn.Module):
         # out shape: (batch_size, seq_length, n_actions)
         lstm_out, lstm_hid = self.lstm(input, hidden)
         return self.linear(lstm_out), lstm_hid
-
-
-@dataclass
-class TrajectoryBuffer:
-    observations: List[torch.Tensor]
-    actions: List[int]
-    rewards: List[float]
-    dones: List[bool]
 
 
 class DRQNAgent():
