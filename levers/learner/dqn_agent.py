@@ -42,12 +42,12 @@ class DQNAgent():
                 learning rate
             tau (float):
                 coefficient used for (soft) polyak update
-                (tau = 1 equals a hard update)
+                (tau = 0 -> no update; tau = 1 -> a hard update)
             gamma (float):
                 discount factor
-            update_target_every (int):
-                the number of episodes between two target updates
-                (=0,1 -> back-to-back updates)
+            len_update_cycle (int):
+                the number of steps between two target updates
+                (= 0,1 -> back-to-back updates)
         """
         # Set q- and target-network (equal at first)
         self.q_net = q_net
