@@ -17,4 +17,4 @@ def n_total_parameters(net: nn.Module) -> int:
     """
     Returns the total number of parameters in network `net`. 
     """
-    return sum(p.nume() for p in net.parameters())
+    return sum(p.numel() for p in net.parameters())
