@@ -121,14 +121,12 @@ class DRQNAgent():
         self.target_net.load_state_dict(self.q_net.state_dict())
         self.n_episodes_since_update = 0
 
-    def reset_hidden_state(self):
+    def reset_new_episode(self, init_obs: torch.Tensor):
+        """
+        Resets the agent's internal state and fills trajectory buffer with
+        initial observation `init_obs`.
+        """
         self.hidden = None
-
-    def reset_trajectory_buffer(self, init_obs: torch.Tensor):
-        """
-        Resets the trajectory buffer with the initial observation `init_obs`
-        and resets the hidden state. 
-        """
         self.buffer = TrajectoryBuffer(
             observations=[init_obs], actions=[], rewards=[], dones=[]
         )
