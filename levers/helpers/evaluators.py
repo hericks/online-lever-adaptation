@@ -1,11 +1,10 @@
 from ..environment import IteratedLeverEnvironment
 from ..learner import DRQNAgent
 
-from typing import Union, List
+from typing import List
 
 import random
 import torch
-
 
 
 def train_drqn_agent(
@@ -17,37 +16,31 @@ def train_drqn_agent(
 ):
     """
     Trains a DRQN agent in environments uniformly sampled from `envs` for
-    `n_episodes` episodes with exploration probability `epsilon`. Training 
-    bootstraps into the last step to simulate 
+    `n_episodes` episodes with exploration probability `epsilon`.
     """
     train_stats = {
         'episode': [],
         'loss': [],
+        'return': [],
     }
     for episode in range(n_episodes):
         # Sample and reset environment from training environments
         env = random.sample(envs, 1)[0]
         obs = env.reset()
-        agent.reset_trajectory_buffer(init_obs=obs)
+        agent.reset_new_episode(init_obs=obs)
+
+        # Setup stats
+        episode_return = 0
 
         # Step through environment
-        if bootstrap_last_step:
-            for step in range(env.episode_length-1):
-                action = agent.act(obs, epsilon)
-                next_obs, reward, done = env.step(action)
-                agent.update_trajectory_buffer(action, reward, next_obs, done)
-                obs = next_obs 
+        for step in range(env.episode_length - int(bootstrap_last_step)):
+            action = agent.act(obs, epsilon)
+            next_obs, reward, done = env.step(action)
+            agent.update_trajectory_buffer(action, reward, next_obs, done)
+            obs = next_obs 
 
-                # This should not happen with the iterated lever environment
-                if done:
-                    raise NameError('Episode done before reaching bootstrap step')
-        else:
-            done = False
-            while not done:
-                action = agent.act(obs, epsilon)
-                next_obs, reward, done = env.step(action)
-                agent.update_trajectory_buffer(action, reward, next_obs, done)
-                obs = next_obs 
+            # Update episode stats
+            episode_return += reward 
 
         # Flush experience to replay memory and train learner
         agent.flush_trajectory_buffer()
@@ -56,6 +49,7 @@ def train_drqn_agent(
         # Fill train stats
         train_stats['episode'].append(episode)
         train_stats['loss'].append(loss)
+        train_stats['return'].append(episode_return)
 
     return train_stats
 
