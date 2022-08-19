@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 
 # Data and logs folder
+obsolete/
 data/
 logs/
 
