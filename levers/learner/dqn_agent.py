@@ -46,7 +46,7 @@ class DQNAgent():
             gamma (float):
                 discount factor
             len_update_cycle (int):
-                the number of steps between two target updates
+                the number of training steps between two target updates
                 (= 0,1 -> back-to-back updates)
         """
         # Set q- and target-network (equal at first)
@@ -119,7 +119,7 @@ class DQNAgent():
         """
         # Perform training step only if experience replay is sufficiently filled
         if len(self.memory) < self.batch_size:
-            return -1.0
+            return -1.
 
         # Obtain batch of samples and convert to stacked tensors
         transitions = self.memory.sample(self.batch_size)
