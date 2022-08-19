@@ -11,6 +11,6 @@ logs/
 .ipynb_checkpoints/
 
 # Ignore figures, pytorch models, and pickle files on default
-.png
-.pt
-.pickle
+*.png
+*.pt
+*.pickle
