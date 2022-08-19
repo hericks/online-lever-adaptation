@@ -91,7 +91,7 @@ class DRQNAgent():
 
         # Parameters specifying the target network updates
         self.tau = tau
-        self.n_episodes_since_update = 0
+        self.n_steps_since_update = 0
         self.len_update_cycle = len_update_cycle
 
         # Initialize the replay memory, current trajectory buffer, and
@@ -119,7 +119,7 @@ class DRQNAgent():
 
         # Reset target network
         self.target_net.load_state_dict(self.q_net.state_dict())
-        self.n_episodes_since_update = 0
+        self.n_steps_since_update = 0
 
     def reset_new_episode(self, init_obs: torch.Tensor):
         """
@@ -223,13 +223,13 @@ class DRQNAgent():
         self.optim.step()
 
         # Update target network if necessary
-        self.n_episodes_since_update += 1
-        if self.n_episodes_since_update >= self.len_update_cycle:
+        self.n_steps_since_update += 1
+        if self.n_steps_since_update >= self.len_update_cycle:
             polyak_update(
                 params=self.q_net.parameters(),
                 target_params=self.target_net.parameters(),     
                 tau=self.tau,
             )
-            self.n_episodes_since_update = 0
+            self.n_steps_since_update = 0
 
         return loss.item()
