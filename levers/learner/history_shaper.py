@@ -1,10 +1,11 @@
 from typing import List
 
 import torch
+import torch.nn as nn
 
 class HistoryShaper:
 
-    def __init__(self, hs_net):
+    def __init__(self, hs_net: nn.Module):
         """
         Simple wrapper for history shaping network. 
         """
