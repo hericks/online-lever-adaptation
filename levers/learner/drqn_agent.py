@@ -12,32 +12,50 @@ import torch.optim as optim
 from levers.learner.replay_memory import (
     ReplayMemory, Trajectory, TrajectoryBuffer
 )
-
+from levers.learner.utils import polyak_update
 
 class DRQNetwork(nn.Module):
 
-    def __init__(self, input_size, hidden_size, n_actions):
+    def __init__(self, rnn: nn.modules.RNNBase, fnn: nn.Module):
+        """
+        NOTE: This always sets `batch_first` for the RNN to `True`. 
+        """
         super().__init__()
-        self.lstm = nn.LSTM(
-            input_size=input_size,
-            hidden_size=hidden_size,
-            batch_first=True,
-        )
-        self.linear = nn.Linear(in_features=hidden_size, out_features=n_actions)
+        self.rnn = rnn
+        self.rnn.batch_first = True
+        self.fnn = fnn
 
     def forward(self, input, hidden=None):
         # input shape: (batch_size, seq_length, input_size)
-        # lstm_out shape: (batch_size, seq_length, hidden_size)
+        # rnn_out shape: (batch_size, seq_length, hidden_size)
         # out shape: (batch_size, seq_length, n_actions)
-        lstm_out, lstm_hid = self.lstm(input, hidden)
-        return self.linear(lstm_out), lstm_hid
+        rnn_out, rnn_hid = self.rnn(input, hidden)
+        return self.fnn(rnn_out), rnn_hid
+
+# class DRQNetwork(nn.Module):
+
+#     def __init__(self, input_size, hidden_size, n_actions):
+#         super().__init__()
+#         self.lstm = nn.LSTM(
+#             input_size=input_size,
+#             hidden_size=hidden_size,
+#             batch_first=True,
+#         )
+#         self.linear = nn.Linear(in_features=hidden_size, out_features=n_actions)
+
+#     def forward(self, input, hidden=None):
+#         # input shape: (batch_size, seq_length, input_size)
+#         # lstm_out shape: (batch_size, seq_length, hidden_size)
+#         # out shape: (batch_size, seq_length, n_actions)
+#         lstm_out, lstm_hid = self.lstm(input, hidden)
+#         return self.linear(lstm_out), lstm_hid
 
 
 class DRQNAgent():
 
     def __init__(
         self,
-        q_net: nn.Module,
+        q_net: DRQNetwork,
         capacity: int,
         batch_size: int,
         lr: float,
@@ -45,15 +63,36 @@ class DRQNAgent():
         len_update_cycle: int = 10,
         tau: float = 1.0,
     ):
-        """Learner suitable for simple DRQ-Learning. """
+        """
+        Learner suitable for simple Q-Learning with recurrent neural network
+        function approximation for usage in partially observable domains.
+
+        Parameters:
+            q_net (DRQNetwork):
+                network to use for q- and target-network
+            capacity (int):
+                capacity of the replay memory (number of episodes stored)
+            batch_size (int):
+                batch size to sample from the replay memory
+            lr (float):
+                learning rate
+            tau (float):
+                coefficient used for (soft) polyak update
+                (tau = 0 -> no update; tau = 1 -> a hard update)
+            gamma (float):
+                discount factor
+            len_update_cycle (int):
+                the number of training steps between two target updates
+                (= 0,1 -> back-to-back updates)
+        """
         # Set q- and target-network (equal at first)
         self.q_net = q_net
         self.target_net = deepcopy(q_net)
 
-        # Save how frequently and soft the target network should be updated
-        self.n_rounds_since_update = 0
+        # Parameters specifying the target network updates
+        self.tau = tau
+        self.n_episodes_since_update = 0
         self.len_update_cycle = len_update_cycle
-        self.tau = tau # = 1.0 -> hard update, = 0.0 -> no update
 
         # Initialize the replay memory, current trajectory buffer, and
         # batch size used for updates
@@ -61,20 +100,35 @@ class DRQNAgent():
         self.buffer: TrajectoryBuffer = None
         self.batch_size = batch_size
 
-        # Initialize optimizer for RQ-network
+        # Initialize optimizer for recurrent Q-network
         # (the learned parameters are frequently copied to the target network)
-        self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
         self.gamma = gamma
+        self.lr = lr
+        self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
 
         # Internal hidden states used for acting
         self.hidden=None
+
+    def reset(self):
+        # Reset experience replay
+        capacity = self.replay_memory.memory.maxlen
+        self.replay_memory = ReplayMemory(capacity)
+
+        # Reset optimizer
+        self.optim = optim.RMSprop(self.q_net.parameters(), lr=self.lr)
+
+        # Reset target network
+        self.target_net.load_state_dict(self.q_net.state_dict())
+        self.n_episodes_since_update = 0
+
+    def reset_hidden_state(self):
+        self.hidden = None
 
     def reset_trajectory_buffer(self, init_obs: torch.Tensor):
         """
         Resets the trajectory buffer with the initial observation `init_obs`
         and resets the hidden state. 
         """
-        self.hidden = None
         self.buffer = TrajectoryBuffer(
             observations=[init_obs], actions=[], rewards=[], dones=[]
         )
@@ -101,29 +155,20 @@ class DRQNAgent():
     def flush_trajectory_buffer(self):
         """
         Marks the end of an episode. Flushes the trajectory buffer to the 
-        agent's replay memory. Performs (possibly soft) target network update.
+        agent's replay memory.
         """
-        if self.buffer:
-            trajectory = Trajectory(
-                torch.stack([o for o in self.buffer.observations]),
-                torch.stack([torch.tensor([a]) for a in self.buffer.actions]),
-                torch.stack([torch.tensor([r]) for r in self.buffer.rewards]),
-                torch.stack([torch.tensor([d]) for d in self.buffer.dones]),
-            )
-            self.replay_memory.push(trajectory)
-            self.buffer = None
+        if not self.buffer:
+            return
 
-        # Increase number of rounds since last policy->target update and
-        # update the target model if necessary
-        # NOTE: When 0 <= self.tau < 1 a soft update is used
-        self.n_rounds_since_update += 1
-        if self.n_rounds_since_update >= self.len_update_cycle:
-            tps = self.target_net.parameters()
-            qps = self.q_net.parameters()
-            for tp, qp in zip(tps, qps):
-                    tp_update = self.tau * qp.data + (1.0 - self.tau) * tp.data
-                    tp.data.copy_(tp_update)
-            self.n_rounds_since_update = 0
+        trajectory = Trajectory(
+            torch.stack([o for o in self.buffer.observations]),
+            torch.stack([torch.tensor([a]) for a in self.buffer.actions]),
+            torch.stack([torch.tensor([r]) for r in self.buffer.rewards]),
+            torch.stack([torch.tensor([d]) for d in self.buffer.dones]),
+        )
+        self.replay_memory.push(trajectory)
+        self.buffer = None
+
 
     def act(self, obs: torch.Tensor, epsilon: float = 0) -> int:
         """
@@ -139,7 +184,11 @@ class DRQNAgent():
 
     def train(self) -> float:
         """
-        Performs single training step of the policy network. 
+        Performs single training step if the agent's experience replay is
+        sufficiently filled.
+
+        Returns the current training loss if a training step was taken, -1
+        otherwise.
         """
         if len(self.replay_memory) < self.batch_size:
             return None
@@ -174,5 +223,15 @@ class DRQNAgent():
         self.optim.zero_grad()
         loss.backward()
         self.optim.step()
+
+        # Update target network if necessary
+        self.n_episodes_since_update += 1
+        if self.n_episodes_since_update >= self.len_update_cycle:
+            polyak_update(
+                params=self.q_net.parameters(),
+                target_params=self.target_net.parameters(),     
+                tau=self.tau,
+            )
+            self.n_episodes_since_update = 0
 
         return loss.item()
