@@ -15,6 +15,14 @@ from levers.partners import FixedPatternPartner
 from levers.learner import DRQNAgent, DRQNetwork
 from levers import IteratedLeverEnvironment
 
+from config import (
+    models_path,
+    train_stats_path,
+    figs_path,
+    experiment_name,
+    model_name_template,
+)
+
 
 # Reproducibility
 seed = 42
@@ -44,14 +52,6 @@ lr = 0.005
 gamma = 0.975
 len_update_cycle = 1
 tau = 1e-2
-
-# Output settings
-models_path = '../models'
-train_stats_path = '../train_stats'
-figs_path = '../figures'
-
-experiment_name = 'all_length3'
-model_name_template = 'DRQN-{partner_patterns}-{train_id}'
 
 # Setup dummy environment
 dummy_env = IteratedLeverEnvironment(
