@@ -8,7 +8,6 @@ import torch
 import torch.nn as nn
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from levers.helpers import generate_binary_patterns, train_drqn_agent
 from levers.partners import FixedPatternPartner
@@ -18,7 +17,6 @@ from levers import IteratedLeverEnvironment
 from config import (
     models_path,
     train_stats_path,
-    figs_path,
     experiment_name,
     model_name_template,
 )
@@ -31,8 +29,13 @@ np.random.seed(seed)
 torch.manual_seed(seed)
 
 # Run experiment separately for the following targets
-# target_slice = slice(0, 35, 1)
-target_slice = slice(35, 70, 1)
+# target_slice = slice( 0, 10, 1)
+# target_slice = slice(10, 20, 1)
+# target_slice = slice(20, 30, 1)
+# target_slice = slice(30, 40, 1)
+# target_slice = slice(40, 50, 1)
+# target_slice = slice(50, 60, 1)
+target_slice = slice(60, 70, 1)
 
 # Environment settings
 payoffs=[1., 1.]
@@ -40,7 +43,7 @@ n_iterations = 100
 bootstrap_last_step = True
 
 # Training settings
-n_train_evals = 10
+n_train_evals = 25
 n_episodes = 2000
 epsilon = 0.3
 
@@ -130,14 +133,3 @@ for partner_patterns in training_configurations[target_slice]:
         out_path = os.path.join(
             train_stats_path, experiment_name, model_name + '.pickle')
         torch.save(train_stats, out_path)
-
-        # Save loss curve
-        fig_path = os.path.join(
-            figs_path, experiment_name, model_name + '-loss-curve.png'
-        )
-        plt.plot(train_stats['episode'], train_stats['loss'])
-        plt.semilogy()
-        plt.xlabel('Episode')
-        plt.ylabel('DRQN train loss')
-        plt.savefig(fig_path)
-        plt.close() 

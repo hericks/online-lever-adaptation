@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --time=12:00:00
-#SBATCH --output=./logs/drqn_slice_02_%j.log
+#SBATCH --output=./logs/drqn_slice_07_%j.log
 #SBATCH --job-name=single_core
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=8G
