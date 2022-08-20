@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --time=48:00:00
-#SBATCH --output=./logs/odql_%j.log
-#SBATCH --job-name=odql
+#SBATCH --output=./logs/drqn_%j.log
+#SBATCH --job-name=drqn
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=8G
 #SBATCH --partition=medium
 
@@ -22,3 +22,4 @@ source activate $HOME/.conda/envs/evotorch
 
 # Deep Recurrent Q-Learner experiments
 # python3 -u drqn.py --seed=0 --train_id_start=0 --n_train_evals=5 --save
+python3 -u drqn.py --seed=1 --train_id_start=5 --n_train_evals=5 --save
