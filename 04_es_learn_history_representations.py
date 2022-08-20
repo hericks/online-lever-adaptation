@@ -9,10 +9,9 @@ from evotorch import Problem
 from evotorch.logging import StdOutLogger
 
 from levers import IteratedLeverEnvironment
-from levers.helpers.helpers import n_total_parameters
-from levers.learner.history_shaper import HistoryShaper
+from levers.helpers import n_total_parameters
 from levers.partners import FixedPatternPartner
-from levers.learner import OpenES, DQNAgent, Transition
+from levers.learner import OpenES, DQNAgent, Transition, HistoryShaper
 
 
 def eval_learner(
