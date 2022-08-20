@@ -121,7 +121,7 @@ def run_experiment(opt):
                     train=True,
                     epsilon=opt.epsilon,
                     param_vec=param_vec,
-                ),
+                )["return"],
                 solution_length=n_learner_params + n_hist_rep_params,
                 initial_bounds=(-1, 1),
                 num_actors="max",
