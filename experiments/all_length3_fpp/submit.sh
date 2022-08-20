@@ -16,4 +16,9 @@ module load cuDNN/8.2.1.32-CUDA-11.3.1
 # Load conda environment
 source activate $HOME/.conda/envs/evotorch
 
-python3 -u odql.py --seed=0 --train_id_start=0 --n_train_evals=5 --save --log_interval=0
+# Online Deep Q-Learner experiments
+# python3 -u odql.py --seed=0 --train_id_start=0 --n_train_evals=5 --save --log_interval=0
+# python3 -u odql.py --seed=1 --train_id_start=5 --n_train_evals=5 --save --log_interval=0
+
+# Deep Recurrent Q-Learner experiments
+# python3 -u drqn.py --seed=0 --train_id_start=0 --n_train_evals=5 --save
