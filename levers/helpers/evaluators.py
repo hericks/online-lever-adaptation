@@ -1,15 +1,13 @@
 from copy import deepcopy
 from typing import List, Optional
 
-import random
-
 import torch
 import torch.nn as nn
 
 from torch.nn.utils import vector_to_parameters, parameters_to_vector
 
 from ..environment import IteratedLeverEnvironment
-from ..learner import DQNAgent, Transition, BaseOnlineLearner
+from ..learner import DQNAgent, Transition
 
 
 def eval_DQNAgent(
@@ -26,7 +24,7 @@ def eval_DQNAgent(
     by rolling out `n_episodes` episodes. Cumulative reward serves as measure
     of fitness.
     """
-    if param_vec != None:
+    if param_vec is not None:
         n_learner_params = sum(p.numel() for p in learner.q_net.parameters())
 
         # Load learner's state
@@ -49,9 +47,9 @@ def eval_DQNAgent(
     def _eval_hist_rep(learner, hist_rep, env, epsilon, train):
         obs = env.reset()
         obs_rep, hidden = hist_rep(obs.unsqueeze(0))
-        env_return = 0
+        env_return, env_greedy_return, env_n_greedy_steps = 0, 0, 0
         for _ in range(env.episode_length - int(bootstrap_last_step)):
-            action, _ = learner.act(obs_rep.squeeze(0), epsilon=epsilon)
+            action, greedy = learner.act(obs_rep.squeeze(0), epsilon=epsilon)
             next_obs, reward, done = env.step(action)
             next_obs_rep, next_hidden = hist_rep(next_obs.unsqueeze(0), hidden)
             if train:
@@ -66,15 +64,17 @@ def eval_DQNAgent(
                 )
                 learner.train()
             env_return += reward
+            env_greedy_return += reward if greedy else 0
+            env_n_greedy_steps += 1 if greedy else 0
             obs_rep = next_obs_rep
             hidden = next_hidden
-        return env_return
+        return env_return, env_greedy_return, env_n_greedy_steps
 
     def _eval_no_hist_rep(learner, env, epsilon, train):
         obs = env.reset()
-        env_return = 0
+        env_return, env_greedy_return, env_n_greedy_steps = 0, 0, 0
         for _ in range(env.episode_length - int(bootstrap_last_step)):
-            action, _ = learner.act(obs, epsilon=epsilon)
+            action, greedy = learner.act(obs, epsilon=epsilon)
             next_obs, reward, done = env.step(action)
             if train:
                 learner.update_memory(
@@ -88,20 +88,29 @@ def eval_DQNAgent(
                 )
                 learner.train()
             env_return += reward
+            env_greedy_return += reward if greedy else 0
+            env_n_greedy_steps += 1 if greedy else 0
             obs = next_obs
-        return env_return
+        return env_return, env_greedy_return, env_n_greedy_steps
 
-    cumulative_reward = 0
+    cum_return = 0
+    cum_greedy_return = 0
+    cum_n_greedy_steps = 0
     for env in envs:
         learner.reset(backup_state_dict)
         if hist_rep is not None:
-            cumulative_reward += _eval_hist_rep(
+            env_ret, env_greedy_ret, env_n_greedy_steps = _eval_hist_rep(
                 learner, hist_rep, env, epsilon, train
             )
         else:
-            cumulative_reward += _eval_no_hist_rep(learner, env, epsilon, train)
+            env_ret, env_greedy_ret, env_n_greedy_steps = _eval_no_hist_rep(
+                learner, env, epsilon, train
+            )
+        cum_return += env_ret
+        cum_greedy_return += env_greedy_ret
+        cum_n_greedy_steps += env_n_greedy_steps
 
-    return cumulative_reward
+    return cum_return, cum_greedy_return, cum_n_greedy_steps
 
 
 # def eval_drqn_agent(
