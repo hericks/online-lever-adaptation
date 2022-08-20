@@ -4,8 +4,6 @@ __pycache__/
 
 # Data and logs folder
 obsolete/
-data/
-logs/
 
 # Jupyter notebooks
 .ipynb_checkpoints/
