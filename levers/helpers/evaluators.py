@@ -93,9 +93,11 @@ def eval_DQNAgent(
             obs = next_obs
         return env_return, env_greedy_return, env_n_greedy_steps
 
-    cum_return = 0
-    cum_greedy_return = 0
-    cum_n_greedy_steps = 0
+    eval_stats = {
+        "return": 0,
+        "greedy_return": 0,
+        "n_greedy_steps": 0,
+    }
     for env in envs:
         learner.reset(backup_state_dict)
         if hist_rep is not None:
@@ -106,11 +108,11 @@ def eval_DQNAgent(
             env_ret, env_greedy_ret, env_n_greedy_steps = _eval_no_hist_rep(
                 learner, env, epsilon, train
             )
-        cum_return += env_ret
-        cum_greedy_return += env_greedy_ret
-        cum_n_greedy_steps += env_n_greedy_steps
+        eval_stats["return"] += env_ret
+        eval_stats["greedy_return"] += env_greedy_ret
+        eval_stats["n_greedy_steps"] += env_n_greedy_steps
 
-    return cum_return, cum_greedy_return, cum_n_greedy_steps
+    return eval_stats
 
 
 # def eval_drqn_agent(
