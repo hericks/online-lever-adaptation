@@ -65,8 +65,8 @@ np.random.seed(seed)
 
 # Initialize environment
 env = IteratedLeverEnvironment(
-    payoffs=[1., 1., 1.], 
-    n_iterations=6, 
+    payoffs=[1.0, 1.0, 1.0],
+    n_iterations=6,
     partner=FixedPatternPartner([0, 1, 2]),
     include_payoffs=False,
 )
@@ -76,22 +76,22 @@ learner = DQNAgent(
     q_net=nn.Sequential(
         nn.Linear(len(env.dummy_obs()), 4),
         nn.ReLU(),
-        nn.Linear(4, env.n_actions())
+        nn.Linear(4, env.n_actions()),
     ),
     capacity=16,
     batch_size=8,
     lr=0.01,
     tau=1.0,
-    len_update_cycle=10*env.episode_length,
+    len_update_cycle=10 * env.episode_length,
 )
 
 # Initialize ES problem and algorithm
 problem = Problem(
-    'max',
+    "max",
     lambda param_vec: eval_learner(param_vec, learner, env, 10),
     solution_length=sum(p.numel() for p in learner.q_net.parameters()),
     initial_bounds=(-1, 1),
-    num_actors='max'
+    num_actors="max",
 )
 searcher = OpenES(
     problem,
@@ -100,7 +100,7 @@ searcher = OpenES(
     stdev_init=0.5,
     stdev_decay=0.99,
     stdev_min=0.1,
-    mean_init=parameters_to_vector(learner.q_net.parameters())
+    mean_init=parameters_to_vector(learner.q_net.parameters()),
 )
 
 # Attach logger to ES algorithm and run
