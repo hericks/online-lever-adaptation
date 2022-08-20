@@ -80,7 +80,8 @@ def run_experiment(opt):
             for pattern in partner_patterns
         ]
 
-        for train_id in range(opt.train_id_start, opt.n_train_evals):
+        train_id_end = opt.train_id_start + opt.n_train_evals
+        for train_id in range(opt.train_id_start, train_id_end):
             print(f"{datetime.now()} {partner_patterns} {train_id:02d}")
 
             hist_rep = nn.LSTM(
