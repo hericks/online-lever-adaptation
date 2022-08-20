@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 import random
-from typing import List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import torch
 import torch.nn as nn
@@ -15,8 +15,7 @@ from .utils import polyak_update
 # TODO: Fix Redundancy with done parameter in train() method.
 
 
-class DQNAgent():
-
+class DQNAgent:
     def __init__(
         self,
         q_net: nn.Module,
@@ -25,7 +24,7 @@ class DQNAgent():
         lr: float,
         tau: float = 1.0,
         gamma: float = 1.0,
-        len_update_cycle: int = 10
+        len_update_cycle: int = 10,
     ):
         """
         Learner suitable for simple Q-Learning with neural network function
@@ -68,9 +67,9 @@ class DQNAgent():
         self.lr = lr
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
 
-    def reset(self, params: List = None):
+    def reset(self, state_dict: Optional[Dict] = None):
         """
-        Resets the agent (memory, target updates, optimizer). 
+        Resets the agent (memory, target updates, optimizer).
         If `params` is non-empty, the passed parameters are cloned into the
         policy network.
         """
@@ -78,10 +77,8 @@ class DQNAgent():
         self.memory = ReplayMemory(self.memory.memory.maxlen)
 
         # If desired, reset policy network
-        if params:
-            with torch.no_grad():
-                for i, param in enumerate(self.q_net.parameters()):
-                    param.set_(params[i].clone().detach())
+        if state_dict is not None:
+            self.q_net.load_state_dict(state_dict)
 
         # Reset optimizer
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=self.lr)
@@ -97,7 +94,7 @@ class DQNAgent():
         action, False for random action). If epsilon is set to zero, the action
         is chosen greedily w.r.t. the current q-network.
         """
-        # TODO: If the number of actions was stored once, the evaluation of 
+        # TODO: If the number of actions was stored once, the evaluation of
         # the q-network could be avoided for epsilon-greedy policies.
         q_vals = self.q_net(obs)
         if random.uniform(0, 1) < epsilon:
@@ -106,20 +103,20 @@ class DQNAgent():
             return torch.argmax(q_vals).item(), True
 
     def update_memory(self, transition: Transition):
-        """Updates the learners experience. """
+        """Updates the learners experience."""
         self.memory.push(transition)
 
     def train(self) -> float:
         """
         Performs a single training step if the agent's experience replay is
         sufficiently filled.
-        
-        Returns the current training loss if a training step was taken, -1 
+
+        Returns the current training loss if a training step was taken, -1
         otherwise.
         """
         # Perform training step only if experience replay is sufficiently filled
         if len(self.memory) < self.batch_size:
-            return -1.
+            return -1.0
 
         # Obtain batch of samples and convert to stacked tensors
         transitions = self.memory.sample(self.batch_size)
@@ -135,8 +132,11 @@ class DQNAgent():
 
         # Compute expected state action values
         next_state_vals = torch.zeros_like(state_action_vals)
-        next_state_vals[~dones,:] = self.target_net(next_states[~dones,:]).max(
-            1, keepdim=True)[0].detach()
+        next_state_vals[~dones, :] = (
+            self.target_net(next_states[~dones, :])
+            .max(1, keepdim=True)[0]
+            .detach()
+        )
         expected_state_action_vals = self.gamma * next_state_vals + rewards
 
         # Compute loss
@@ -154,7 +154,7 @@ class DQNAgent():
         if self.n_steps_since_update >= self.len_update_cycle:
             polyak_update(
                 params=self.q_net.parameters(),
-                target_params=self.target_net.parameters(),     
+                target_params=self.target_net.parameters(),
                 tau=self.tau,
             )
             self.n_steps_since_update = 0
