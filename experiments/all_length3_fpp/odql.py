@@ -17,7 +17,11 @@ from evotorch.logging import PandasLogger, StdOutLogger
 from levers import IteratedLeverEnvironment
 from levers.partners import FixedPatternPartner
 from levers.learner import DQNAgent, OpenES
-from levers.helpers import generate_binary_patterns, n_total_parameters, eval_learner
+from levers.helpers import (
+    generate_binary_patterns,
+    n_total_parameters,
+    eval_dqn_learner,
+)
 
 
 def get_parser(default_config_files: List[str]):
@@ -30,9 +34,10 @@ def get_parser(default_config_files: List[str]):
     p.add_argument("--payoffs", action="append", type=float)
     p.add_argument("--n_iterations", type=int)
 
-    # Experiment
+    # Training
     p.add_argument("--n_train_evals", type=int)
     p.add_argument("--train_id_start", type=int)
+    p.add_argument("--epsilon", type=float)
 
     # History representation network
     p.add_argument("--hist_rep_dim", type=int)
@@ -108,8 +113,8 @@ def run_experiment(opt):
 
             problem = Problem(
                 "max",
-                lambda param_vec: eval_learner(
-                    learner, hist_rep, train_envs, param_vec
+                lambda param_vec: eval_dqn_learner(
+                    learner, hist_rep, train_envs, opt.epsilon, True, param_vec
                 ),
                 solution_length=n_learner_params + n_hist_rep_params,
                 initial_bounds=(-1, 1),
