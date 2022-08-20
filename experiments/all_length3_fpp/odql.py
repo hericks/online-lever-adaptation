@@ -20,7 +20,7 @@ from levers.learner import DQNAgent, OpenES
 from levers.helpers import (
     generate_binary_patterns,
     n_total_parameters,
-    eval_dqn_learner,
+    eval_DQNAgent,
 )
 
 
@@ -113,8 +113,14 @@ def run_experiment(opt):
 
             problem = Problem(
                 "max",
-                lambda param_vec: eval_dqn_learner(
-                    learner, hist_rep, train_envs, opt.epsilon, True, param_vec
+                lambda param_vec: eval_DQNAgent(
+                    learner=learner,
+                    hist_rep=hist_rep,
+                    envs=train_envs,
+                    bootstrap_last_step=True,
+                    train=True,
+                    epsilon=opt.epsilon,
+                    param_vec=param_vec,
                 ),
                 solution_length=n_learner_params + n_hist_rep_params,
                 initial_bounds=(-1, 1),
@@ -140,7 +146,9 @@ def run_experiment(opt):
             if opt.save:
                 pandas_logger = PandasLogger(searcher)
             if opt.log_interval != 0:
-                stdout_logger = StdOutLogger(searcher, interval=opt.log_interval)
+                stdout_logger = StdOutLogger(
+                    searcher, interval=opt.log_interval
+                )
 
             # Run ES algorithm
             searcher.run(opt.n_epochs)
