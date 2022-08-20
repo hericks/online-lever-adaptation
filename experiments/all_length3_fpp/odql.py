@@ -145,15 +145,15 @@ def run_experiment(opt):
                 train_stats = pandas_logger.to_dataframe()
                 torch.save(
                     learner.q_net.state_dict(),
-                    f"models/ODQL-{partner_patterns}-{train_id}.pt",
+                    f"models/odql/ODQL-{partner_patterns}-{train_id}.pt",
                 )
                 torch.save(
                     hist_rep.state_dict(),
-                    f"models/HIST-{partner_patterns}-{train_id}.pt",
+                    f"models/odql/HIST-{partner_patterns}-{train_id}.pt",
                 )
                 torch.save(
                     train_stats,
-                    f"train_stats/ODQL-{partner_patterns}-{train_id}.pickle",
+                    f"train_stats/odql/ODQL-{partner_patterns}-{train_id}.pickle",
                 )
 
 
@@ -176,11 +176,10 @@ if __name__ == "__main__":
     p = get_parser(default_config_files)
     opt = p.parse_args()
 
-    print("Experiment parameters.")
+    print("ODQL Experiment parameters.")
     print(opt, end="\n\n")
 
     print("Parameter sources.")
     print(p.format_values())
 
-    # Run
     run_experiment(opt)
