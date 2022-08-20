@@ -152,7 +152,7 @@ def run_experiment(opt):
                 )
                 torch.save(
                     train_stats,
-                    f"models/HIST-{partner_patterns}-{train_id}.pickle",
+                    f"train_stats/ODQL-{partner_patterns}-{train_id}.pickle",
                 )
 
 
