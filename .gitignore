@@ -8,6 +8,9 @@ obsolete/
 # Jupyter notebooks
 .ipynb_checkpoints/
 
+# VScode
+.vscode/
+
 # Ignore figures, pytorch models, and pickle files on default
 *.png
 *.pt
