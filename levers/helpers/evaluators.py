@@ -9,15 +9,16 @@ import torch.nn as nn
 from torch.nn.utils import vector_to_parameters, parameters_to_vector
 
 from ..environment import IteratedLeverEnvironment
-from ..learner import DRQNAgent, DQNAgent, HistoryShaper, Transition
+from ..learner import DQNAgent, Transition, BaseOnlineLearner
 
 
-def eval_dqn_learner(
+def eval_DQNAgent(
     learner: DQNAgent,
-    hist_rep: nn.RNNBase,
+    hist_rep: Optional[nn.RNNBase],
     envs: List[IteratedLeverEnvironment],
-    epsilon: float,
     bootstrap_last_step: bool,
+    train: bool,
+    epsilon: Optional[float],
     param_vec: Optional[torch.Tensor] = None,
 ):
     """
@@ -29,48 +30,76 @@ def eval_dqn_learner(
         n_learner_params = sum(p.numel() for p in learner.q_net.parameters())
 
         # Load learner's state
-        vector_to_parameters(param_vec[:n_learner_params], learner.q_net.parameters())
+        vector_to_parameters(
+            param_vec[:n_learner_params], learner.q_net.parameters()
+        )
 
         # Load history representation's state
-        vector_to_parameters(param_vec[n_learner_params:], hist_rep.parameters())
+        if hist_rep != None:
+            vector_to_parameters(
+                param_vec[n_learner_params:], hist_rep.parameters()
+            )
 
     # Save to reload after each environment evaluation
-    backup_state_dict = deepcopy(learner.q_net.state_dict())
+    if train:
+        backup_state_dict = deepcopy(learner.q_net.state_dict())
+    else:
+        backup_state_dict = None
 
-    # Evaluate learners fitness
-    cumulative_reward = 0
-    for env in envs:
-        # Reset environment
+    def _eval_hist_rep(learner, hist_rep, env, epsilon, train):
         obs = env.reset()
         obs_rep, hidden = hist_rep(obs.unsqueeze(0))
-
-        # Reset learner
-        learner.q_net.load_state_dict(backup_state_dict)
-        learner.reset()
-
+        env_return = 0
         for _ in range(env.episode_length - int(bootstrap_last_step)):
             action, _ = learner.act(obs_rep.squeeze(0), epsilon=epsilon)
             next_obs, reward, done = env.step(action)
-
-            # Give experience to learner and train
             next_obs_rep, next_hidden = hist_rep(next_obs.unsqueeze(0), hidden)
-            learner.update_memory(
-                Transition(
-                    obs_rep.squeeze(0).detach(),
-                    action,
-                    next_obs_rep.squeeze(0).detach(),
-                    reward,
-                    done,
+            if train:
+                learner.update_memory(
+                    Transition(
+                        obs_rep.squeeze(0).detach(),
+                        action,
+                        next_obs_rep.squeeze(0).detach(),
+                        reward,
+                        done,
+                    )
                 )
-            )
-            learner.train()
-
-            # Update train stats
-            cumulative_reward += reward
-
-            # Update next observation -> observation
+                learner.train()
+            env_return += reward
             obs_rep = next_obs_rep
             hidden = next_hidden
+        return env_return
+
+    def _eval_no_hist_rep(learner, env, epsilon, train):
+        obs = env.reset()
+        env_return = 0
+        for _ in range(env.episode_length - int(bootstrap_last_step)):
+            action, _ = learner.act(obs, epsilon=epsilon)
+            next_obs, reward, done = env.step(action)
+            if train:
+                learner.update_memory(
+                    Transition(
+                        obs.detach(),
+                        action,
+                        next_obs.detach(),
+                        reward,
+                        done,
+                    )
+                )
+                learner.train()
+            env_return += reward
+            obs = next_obs
+        return env_return
+
+    cumulative_reward = 0
+    for env in envs:
+        learner.reset(backup_state_dict)
+        if hist_rep is not None:
+            cumulative_reward += _eval_hist_rep(
+                learner, hist_rep, env, epsilon, train
+            )
+        else:
+            cumulative_reward += _eval_no_hist_rep(learner, env, epsilon, train)
 
     return cumulative_reward
 
