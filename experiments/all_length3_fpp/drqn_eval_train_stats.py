@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     patterns = generate_binary_patterns(3)
     for pattern_id, pattern in enumerate(combinations(patterns, 4)):
-        print(f"Pattern: {pattern+1} | {pattern_id:2d} / 70")
+        print(f"Pattern: {pattern} | {pattern_id+1:2d} / 70")
 
         losses = np.zeros((n_train_evals, n_episodes))
         returns = np.zeros_like(losses)
@@ -70,7 +70,9 @@ if __name__ == "__main__":
                 losses[train_id, :] = np.array(train_stats["loss"])
                 returns[train_id, :] = np.array(train_stats["return"])
             except:
-                print(f"Something went wrong with {pattern}-{train_id}.")
+                print(
+                    f"Something went wrong with reading in data for: {pattern}-{train_id}."
+                )
 
         save_smooth_loss_curve(
             losses,
