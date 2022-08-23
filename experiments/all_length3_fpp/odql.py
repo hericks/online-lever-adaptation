@@ -17,11 +17,8 @@ from evotorch.logging import PandasLogger, StdOutLogger
 from levers import IteratedLeverEnvironment
 from levers.partners import FixedPatternPartner
 from levers.learner import DQNAgent, OpenES
-from levers.helpers import (
-    generate_binary_patterns,
-    n_total_parameters,
-    eval_DQNAgent,
-)
+from levers.evaluators import eval_DQNAgent
+from levers.helpers import generate_binary_patterns, n_total_parameters
 
 
 def get_parser(default_config_files: List[str]):
