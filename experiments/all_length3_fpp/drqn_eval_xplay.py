@@ -105,7 +105,9 @@ if __name__ == "__main__":
         for id2, state_dict2 in enumerate(xplay_state_dicts):
             agent1.q_net.load_state_dict(state_dict1)
             agent2.q_net.load_state_dict(state_dict2)
-            xplay_results[id1, id2] = eval_drqn_xplay(env, agent1, agent2, True)
+            xplay_results[id1, id2] = eval_DRQNAgent_xplay(
+                env, agent1, agent2, True
+            )
 
     visualize_xplay_matrix(
         xplay_results,
