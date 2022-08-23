@@ -10,15 +10,17 @@ import torch.nn as nn
 import torch.optim as optim
 
 from levers.learner.replay_memory import (
-    ReplayMemory, Trajectory, TrajectoryBuffer
+    ReplayMemory,
+    Trajectory,
+    TrajectoryBuffer,
 )
 from levers.learner.utils import polyak_update
 
-class DRQNetwork(nn.Module):
 
+class DRQNetwork(nn.Module):
     def __init__(self, rnn: nn.modules.RNNBase, fnn: nn.Module):
         """
-        NOTE: This always sets `batch_first` for the RNN to `True`. 
+        NOTE: This always sets `batch_first` for the RNN to `True`.
         """
         super().__init__()
         self.rnn = rnn
@@ -31,6 +33,7 @@ class DRQNetwork(nn.Module):
         # out shape: (batch_size, seq_length, n_actions)
         rnn_out, rnn_hid = self.rnn(input, hidden)
         return self.fnn(rnn_out), rnn_hid
+
 
 # class DRQNetwork(nn.Module):
 
@@ -51,8 +54,7 @@ class DRQNetwork(nn.Module):
 #         return self.linear(lstm_out), lstm_hid
 
 
-class DRQNAgent():
-
+class DRQNAgent:
     def __init__(
         self,
         q_net: DRQNetwork,
@@ -107,7 +109,7 @@ class DRQNAgent():
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
 
         # Internal hidden states used for acting
-        self.hidden=None
+        self.hidden = None
 
     def reset(self):
         # Reset experience replay
@@ -120,6 +122,7 @@ class DRQNAgent():
         # Reset target network
         self.target_net.load_state_dict(self.q_net.state_dict())
         self.n_steps_since_update = 0
+        self.hidden = None
 
     def reset_new_episode(self, init_obs: torch.Tensor):
         """
@@ -132,27 +135,23 @@ class DRQNAgent():
         )
 
     def update_trajectory_buffer(
-        self, 
-        action: int,
-        reward: float,
-        next_obs: torch.Tensor,
-        done: bool
-    ):  
-        """Updates the trajectory buffer with the passed experience passed. """
+        self, action: int, reward: float, next_obs: torch.Tensor, done: bool
+    ):
+        """Updates the trajectory buffer with the passed experience passed."""
         # Append experience to trajectory buffer
         self.buffer.actions.append(action)
         self.buffer.rewards.append(reward)
         self.buffer.observations.append(next_obs)
         self.buffer.dones.append(done)
 
-        # If experience was collected at last step of an episode, flush the 
+        # If experience was collected at last step of an episode, flush the
         # trajectory buffer automatically
         if done:
             self.flush_trajectory_buffer()
 
     def flush_trajectory_buffer(self):
         """
-        Marks the end of an episode. Flushes the trajectory buffer to the 
+        Marks the end of an episode. Flushes the trajectory buffer to the
         agent's replay memory.
         """
         if not self.buffer:
@@ -166,7 +165,6 @@ class DRQNAgent():
         )
         self.replay_memory.push(trajectory)
         self.buffer = None
-
 
     def act(self, obs: torch.Tensor, epsilon: float = 0) -> int:
         """
@@ -202,12 +200,12 @@ class DRQNAgent():
 
         # Compute action state values for all observations but the last in
         # the sequence
-        q_values = self.q_net(obs)[0][:,:-1,:]
+        q_values = self.q_net(obs)[0][:, :-1, :]
         state_action_values = q_values.gather(2, actions)
 
         # Compute expected state action values for those states
         next_state_values = torch.zeros_like(state_action_values)
-        target_q_values = self.target_net(obs)[0][:,1:,:]
+        target_q_values = self.target_net(obs)[0][:, 1:, :]
         target_next_state_values = target_q_values.max(2, True)[0].detach()
         next_state_values[~dones] = target_next_state_values[~dones]
         expected_state_action_values = self.gamma * next_state_values + rewards
@@ -227,7 +225,7 @@ class DRQNAgent():
         if self.n_steps_since_update >= self.len_update_cycle:
             polyak_update(
                 params=self.q_net.parameters(),
-                target_params=self.target_net.parameters(),     
+                target_params=self.target_net.parameters(),
                 tau=self.tau,
             )
             self.n_steps_since_update = 0
