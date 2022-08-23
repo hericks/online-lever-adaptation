@@ -1,8 +1,8 @@
-import os
 import random
 from itertools import combinations
 from datetime import datetime
 from typing import List
+from os import path
 
 import configargparse
 import numpy as np
@@ -84,7 +84,29 @@ def run_experiment(opt):
 
         train_id_end = opt.train_id_start + opt.n_train_evals
         for train_id in range(opt.train_id_start, train_id_end):
-            print(f"{datetime.now()} {partner_patterns} {train_id:02d}")
+            print(f"{datetime.now()} {partner_patterns} {train_id:02d}", end="")
+
+            # When running on cluster, check if output files already exist.
+            # If this is the case, skip this iteration.
+            if opt.save:
+                q_net_path = (
+                    f"models/odql/ODQL-{partner_patterns}-{train_id}.pt"
+                )
+                hist_net_path = (
+                    f"models/odql/HIST-{partner_patterns}-{train_id}.pt"
+                )
+                train_stats_path = f"train_stats/odql/ODQL-{partner_patterns}-{train_id}.pickle"
+                if (
+                    path.isfile(q_net_path)
+                    and path.isfile(hist_net_path)
+                    and path.isfile(train_stats_path)
+                ):
+                    print(" already exists.")
+                    continue
+                else:
+                    print("")
+            else:
+                print("")
 
             hist_rep = nn.LSTM(
                 input_size=len(train_envs[0].dummy_obs()),
@@ -153,30 +175,21 @@ def run_experiment(opt):
             # Save models and train stats
             if opt.save:
                 train_stats = pandas_logger.to_dataframe()
-                torch.save(
-                    learner.q_net.state_dict(),
-                    f"models/odql/ODQL-{partner_patterns}-{train_id}.pt",
-                )
-                torch.save(
-                    hist_rep.state_dict(),
-                    f"models/odql/HIST-{partner_patterns}-{train_id}.pt",
-                )
-                torch.save(
-                    train_stats,
-                    f"train_stats/odql/ODQL-{partner_patterns}-{train_id}.pickle",
-                )
+                torch.save(learner.q_net.state_dict(), q_net_path)
+                torch.save(hist_rep.state_dict(), hist_net_path)
+                torch.save(train_stats, train_stats_path)
 
 
 if __name__ == "__main__":
     # Load configuration
     default_config_files = [
-        os.path.join(
+        path.join(
             "/data/engs-oxfair3/orie4536/online-lever-adaptation/",
             "experiments",
             "all_length3_fpp",
             "defaults.conf",
         ),
-        os.path.join(
+        path.join(
             "/data/engs-oxfair3/orie4536/online-lever-adaptation/",
             "experiments",
             "all_length3_fpp",
