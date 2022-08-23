@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from levers.environment import IteratedLeverEnvironment
 from levers.helpers import generate_binary_patterns
 from levers.learner import DRQNAgent, DRQNetwork
-from levers.evaluators import eval_drqn_xplay
+from levers.evaluators import eval_DRQNAgent_xplay
 from levers.helpers import visualize_xplay_matrix
 
 from drqn import get_parser
