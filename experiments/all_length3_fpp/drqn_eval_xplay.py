@@ -8,8 +8,6 @@ import os
 import torch
 import torch.nn as nn
 
-import matplotlib.pyplot as plt
-
 from levers.environment import IteratedLeverEnvironment
 from levers.helpers import generate_binary_patterns
 from levers.learner import DRQNAgent, DRQNetwork
