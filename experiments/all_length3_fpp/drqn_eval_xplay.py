@@ -24,8 +24,8 @@ if __name__ == "__main__":
     # n_agents = 70
 
     out_path = "results/crossplay/"
-    name_templae = "drqn-crossplay-{n_agents}x{n_agents}-{seed}.png"
-    # name_templae = "drqn-complete-crossplay-{n_agents}x{n_agents}.png"
+    name_template = "drqn-crossplay-{n_agents}x{n_agents}-{seed}.png"
+    # name_template = "drqn-complete-crossplay-{n_agents}x{n_agents}.png"
 
     # Make reproducible
     random.seed(seed)
@@ -100,6 +100,7 @@ if __name__ == "__main__":
 
     xplay_results = np.zeros((n_agents, n_agents))
     for id1, state_dict1 in enumerate(xplay_state_dicts):
+        print(id1)
         for id2, state_dict2 in enumerate(xplay_state_dicts):
             agent1.q_net.load_state_dict(state_dict1)
             agent2.q_net.load_state_dict(state_dict2)
@@ -110,7 +111,7 @@ if __name__ == "__main__":
     visualize_xplay_matrix(
         xplay_results,
         os.path.join(
-            out_path, name_templae.format(n_agents=n_agents, seed=seed)
+            out_path, name_template.format(n_agents=n_agents, seed=seed)
         ),
         vmin=0,
         vmax=100,
