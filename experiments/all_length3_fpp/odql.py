@@ -70,7 +70,9 @@ def run_experiment(opt):
     torch.manual_seed(opt.seed)
 
     patterns = generate_binary_patterns(3)
-    for partner_patterns in combinations(patterns, 4):
+    for partner_patterns_id, partner_patterns in enumerate(
+        combinations(patterns, 4)
+    ):
         train_envs = [
             IteratedLeverEnvironment(
                 payoffs=opt.payoffs,
@@ -84,7 +86,10 @@ def run_experiment(opt):
 
         train_id_end = opt.train_id_start + opt.n_train_evals
         for train_id in range(opt.train_id_start, train_id_end):
-            print(f"{datetime.now()} {partner_patterns} {train_id:02d}", end="")
+            print(
+                f"{datetime.now()} {partner_patterns} {partner_patterns_id} {train_id:02d}",
+                end="",
+            )
 
             # When running on cluster, check if output files already exist.
             # If this is the case, skip this iteration.
