@@ -70,7 +70,7 @@ def run_experiment(opt):
     torch.manual_seed(opt.seed)
 
     patterns = generate_binary_patterns(3)
-    for partner_patterns_id, partner_patterns in enumerate(
+    for ppid, partner_patterns in enumerate(
         combinations(patterns, 4)
     ):
         train_envs = [
@@ -87,7 +87,7 @@ def run_experiment(opt):
         train_id_end = opt.train_id_start + opt.n_train_evals
         for train_id in range(opt.train_id_start, train_id_end):
             print(
-                f"{datetime.now()} {partner_patterns} {partner_patterns_id} {train_id:02d}",
+                f"{datetime.now()} {partner_patterns} {ppid} {train_id:02d}",
                 end="",
             )
 
