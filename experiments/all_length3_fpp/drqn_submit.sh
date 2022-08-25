@@ -7,6 +7,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=8G
 #SBATCH --partition=medium
+#SBATCH --open-mode=append
 #SBATCH --clusters=all
 
 # Load necessary applications
@@ -23,6 +24,14 @@ source activate $HOME/.conda/envs/evotorch
 # python3 -u drqn.py --seed=2 --train_id_start=10 --n_train_evals=5 --save
 # python3 -u drqn.py --seed=3 --train_id_start=15 --n_train_evals=5 --save
 # python3 -u drqn.py --seed=4 --train_id_start=20 --n_train_evals=5 --save
+# python3 -u drqn.py --seed=5 --train_id_start=25 --n_train_evals=5 --save
+# python3 -u drqn.py --seed=6 --train_id_start=30 --n_train_evals=5 --save
+# python3 -u drqn.py --seed=7 --train_id_start=35 --n_train_evals=5 --save
+# python3 -u drqn.py --seed=8 --train_id_start=40 --n_train_evals=5 --save
+# python3 -u drqn.py --seed=9 --train_id_start=45 --n_train_evals=5 --save
 
-# TODO:
-# 
+# Running.
+#
+
+# TODO.
+#
