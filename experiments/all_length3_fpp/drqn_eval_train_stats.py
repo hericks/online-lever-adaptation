@@ -46,7 +46,7 @@ def save_smooth_returns_curve(returns: np.array, out_path: str):
 
 if __name__ == "__main__":
     # Settings
-    n_train_evals = 25
+    n_train_evals = 50
     n_episodes = 2000
 
     # Save figures
