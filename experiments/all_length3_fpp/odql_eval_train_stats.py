@@ -23,7 +23,7 @@ def save_smooth_mean_evals(mean_evals: np.array, out_path: str):
 
 if __name__ == "__main__":
     # Settings
-    n_train_evals = 5
+    n_train_evals = 25
     n_epochs = 300
 
     # Save figures

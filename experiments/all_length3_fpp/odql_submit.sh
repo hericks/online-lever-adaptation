@@ -7,6 +7,7 @@
 #SBATCH --cpus-per-task=48
 #SBATCH --mem-per-cpu=2G
 #SBATCH --partition=medium
+#SBATCH --open-mode=append
 #SBATCH --clusters=all
 
 # Load necessary applications
@@ -23,6 +24,13 @@ source activate $HOME/.conda/envs/evotorch
 # python3 -u odql.py --seed=2 --train_id_start=2 --n_train_evals=1 --save --log_interval=0
 # python3 -u odql.py --seed=3 --train_id_start=3 --n_train_evals=1 --save --log_interval=0
 # python3 -u odql.py --seed=4 --train_id_start=4 --n_train_evals=1 --save --log_interval=0
+# python3 -u odql.py --seed=5 --train_id_start=5 --n_train_evals=5 --save --log_interval=0
+# python3 -u odql.py --seed=6 --train_id_start=10 --n_train_evals=5 --save --log_interval=0
+# python3 -u odql.py --seed=7 --train_id_start=15 --n_train_evals=5 --save --log_interval=0
+# python3 -u odql.py --seed=8 --train_id_start=20 --n_train_evals=5 --save --log_interval=0
 
-# TODO: 
-python3 -u odql.py --seed=5 --train_id_start=5 --n_train_evals=5 --save --log_interval=0
+# Running.
+#
+
+# TODO.
+#
