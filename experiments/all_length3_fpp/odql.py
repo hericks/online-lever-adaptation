@@ -9,12 +9,13 @@ import numpy as np
 
 import torch
 import torch.nn as nn
-from torch.nn.utils import parameters_to_vector
+from torch.nn.utils import parameters_to_vector, vector_to_parameters
 
 from evotorch import Problem
 from evotorch.logging import PandasLogger, StdOutLogger
 
 from levers import IteratedLeverEnvironment
+from levers.evaluators.dqn_evaluators import distribute_param_vec_with_hist_rep
 from levers.partners import FixedPatternPartner
 from levers.learner import DQNAgent, OpenES
 from levers.evaluators import eval_DQNAgent
@@ -70,9 +71,7 @@ def run_experiment(opt):
     torch.manual_seed(opt.seed)
 
     patterns = generate_binary_patterns(3)
-    for ppid, partner_patterns in enumerate(
-        combinations(patterns, 4)
-    ):
+    for ppid, partner_patterns in enumerate(combinations(patterns, 4)):
         train_envs = [
             IteratedLeverEnvironment(
                 payoffs=opt.payoffs,
@@ -145,6 +144,7 @@ def run_experiment(opt):
                     train=True,
                     epsilon=opt.epsilon,
                     param_vec=param_vec,
+                    distribute_param_vec=distribute_param_vec_with_hist_rep,
                 )["return"],
                 solution_length=n_learner_params + n_hist_rep_params,
                 initial_bounds=(-1, 1),
@@ -179,7 +179,17 @@ def run_experiment(opt):
 
             # Save models and train stats
             if opt.save:
+                param_vec = searcher.status["center"]
+                vector_to_parameters(
+                    param_vec[:n_learner_params],
+                    learner.q_net.parameters(),
+                )
+                vector_to_parameters(
+                    param_vec[n_learner_params:],
+                    hist_rep.parameters(),
+                )
                 train_stats = pandas_logger.to_dataframe()
+
                 torch.save(learner.q_net.state_dict(), q_net_path)
                 torch.save(hist_rep.state_dict(), hist_net_path)
                 torch.save(train_stats, train_stats_path)
