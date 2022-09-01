@@ -1,0 +1,42 @@
+program: drqn_train.py
+name: drqn-random-sweep
+project: drqn-hyperparameter-search
+entity: hericks
+method: random
+metric:
+  goal: minimize
+  name: train_loss_mean
+parameters:
+  n_train_evals:
+    value: 5
+  n_episodes:
+    value: 1000
+  rnn_hidden_dim:
+    value: 4
+  fnn_hidden_dim:
+    value: 4
+  eps_start: 
+    value: 0.5
+  eps_diff:
+    value: 0.001
+  eps_min:
+    value: 0
+  capacity:
+    value: 16
+  batch_size:
+    value: 8
+  learning_rate: 
+    distribution: log_uniform_values
+    min: 0.0001
+    max: 0.1
+  tau:
+    distribution: log_uniform_values
+    min: 0.0005
+    max: 0.1
+  gamma:
+    value: 0.975
+  len_update_cycle:
+    distribution: q_log_uniform_values
+    q: 1
+    min: 1
+    max: 64
