@@ -19,3 +19,5 @@ obsolete/
 
 wandb
 wandb-debug.log
+
+experiments/temp
