@@ -22,4 +22,4 @@ source activate $HOME/.conda/envs/evotorch
 # wandb sweep drqn_random_sweep.yml
 
 # Start agent
-wandb agent hericks/drqn-hyperparameter-search/d8yftxym
+wandb agent hericks/drqn-hyperparameter-search/6e8ji29h

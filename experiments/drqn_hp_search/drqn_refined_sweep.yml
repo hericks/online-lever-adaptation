@@ -32,4 +32,4 @@ parameters:
   gamma:
     value: 0.975
   len_update_cycle:
-    values: [1, 2, 5, 10] 
+    values: [1, 2, 4, 8, 16] 
