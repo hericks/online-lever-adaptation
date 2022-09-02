@@ -1,14 +1,14 @@
 program: drqn_train.py
-name: drqn-refined-sweep-50
+name: drqn-refined-sweep
 project: drqn-hyperparameter-search
 entity: hericks
 method: grid
 metric:
-  goal: minimize
-  name: mean_train_loss
+  goal: maximize
+  name: mean_test_return
 parameters:
   n_train_evals:
-    value: 50
+    value: 10
   n_episodes:
     value: 1000
   rnn_hidden_dim:
@@ -26,10 +26,10 @@ parameters:
   batch_size:
     value: 8
   learning_rate: 
-    values: [0.005, 0.01, 0.015, 0.02]
+    values: [0.001, 0.0025, 0.005, 0.0075, 0.01]
   tau:
-    values: [0.001, 0.005, 0.01, 0.05]
+    values: [0.001, 0.0025, 0.005, 0.0075, 0.01]
   gamma:
     value: 0.975
   len_update_cycle:
-    values: [10, 15, 20, 25] 
+    values: [1, 2, 5, 10] 
