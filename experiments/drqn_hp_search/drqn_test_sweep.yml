@@ -1,11 +1,11 @@
 program: drqn_train.py
-name: drqn-random-sweep
+name: drqn-test-sweep
 project: drqn-hyperparameter-search
 entity: hericks
-method: random
+method: grid
 metric:
   goal: maximize
-  name: mean_test_return
+  name: mean_train_return
 parameters:
   n_train_evals:
     value: 5
@@ -22,27 +22,14 @@ parameters:
   eps_min:
     value: 0
   capacity:
-    distribution: q_log_uniform_values
-    q: 1
-    min: 16
-    max: 64
+    value: 16
   batch_size:
-    distribution: q_log_uniform_values
-    q: 1
-    min: 8
-    max: 128
+    value: 8
   learning_rate: 
-    distribution: log_uniform_values
-    min: 0.001
-    max: 0.1
+    values: [0.01, 0.001]
   tau:
-    distribution: log_uniform_values
-    min: 0.0005
-    max: 0.1
+    values: [0.01, 0.001]
   gamma:
     value: 0.975
   len_update_cycle:
-    distribution: q_log_uniform_values
-    q: 1
-    min: 1
-    max: 32
+    value: 1 
