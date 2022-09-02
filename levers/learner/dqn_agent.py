@@ -66,6 +66,7 @@ class DQNAgent:
         self.gamma = gamma
         self.lr = lr
         self.optim = optim.RMSprop(self.q_net.parameters(), lr=lr)
+        self.criterion = nn.SmoothL1Loss()
 
     def reset(self, state_dict: Optional[Dict] = None):
         """
@@ -131,17 +132,13 @@ class DQNAgent:
         state_action_vals = self.q_net(states).gather(1, actions)
 
         # Compute expected state action values
-        next_state_vals = torch.zeros_like(state_action_vals)
-        next_state_vals[~dones, :] = (
-            self.target_net(next_states[~dones, :])
-            .max(1, keepdim=True)[0]
-            .detach()
-        )
+        next_actions = torch.argmax(self.q_net(next_states), 1, True)
+        next_state_vals = self.target_net(next_states).gather(1, next_actions)
+        next_state_vals[dones] = 0
         expected_state_action_vals = self.gamma * next_state_vals + rewards
 
         # Compute loss
-        criterion = nn.SmoothL1Loss()
-        loss = criterion(state_action_vals, expected_state_action_vals)
+        loss = self.criterion(state_action_vals, expected_state_action_vals)
 
         # Optimize model
         # TODO: Should the gradient be clamped?
