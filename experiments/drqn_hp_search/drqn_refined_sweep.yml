@@ -22,9 +22,9 @@ parameters:
   eps_min:
     value: 0
   capacity:
-    value: 16
+    values: [16, 32]
   batch_size:
-    value: 8
+    values: [8, 16]
   learning_rate: 
     values: [0.001, 0.0025, 0.005, 0.0075, 0.01]
   tau:
