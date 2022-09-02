@@ -5,6 +5,7 @@ __pycache__/
 # Data and logs folder
 obsolete/
 
+
 # Jupyter notebooks
 .ipynb_checkpoints/
 
@@ -15,3 +16,6 @@ obsolete/
 *.png
 *.pt
 *.pickle
+
+wandb
+wandb-debug.log
