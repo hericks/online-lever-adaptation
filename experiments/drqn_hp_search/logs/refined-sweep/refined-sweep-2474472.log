@@ -1,0 +1,761 @@
+wandb: Starting wandb agent 🕵️
+2022-09-02 12:58:27,314 - wandb.wandb_agent - INFO - Running runs: []
+2022-09-02 12:58:27,544 - wandb.wandb_agent - INFO - Agent received command: run
+2022-09-02 12:58:27,544 - wandb.wandb_agent - INFO - Agent starting run with config:
+	batch_size: 8
+	capacity: 16
+	eps_diff: 0.001
+	eps_min: 0
+	eps_start: 0.5
+	fnn_hidden_dim: 4
+	gamma: 0.975
+	learning_rate: 0.001
+	len_update_cycle: 16
+	n_episodes: 1000
+	n_train_evals: 10
+	rnn_hidden_dim: 4
+	tau: 0.001
+2022-09-02 12:58:27,556 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python drqn_train.py --batch_size=8 --capacity=16 --eps_diff=0.001 --eps_min=0 --eps_start=0.5 --fnn_hidden_dim=4 --gamma=0.975 --learning_rate=0.001 --len_update_cycle=16 --n_episodes=1000 --n_train_evals=10 --rnn_hidden_dim=4 --tau=0.001
+wandb: Currently logged in as: hericks. Use `wandb login --relogin` to force relogin
+2022-09-02 12:58:32,566 - wandb.wandb_agent - INFO - Running runs: ['ni7gn6l1']
+wandb: Tracking run with wandb version 0.13.2
+wandb: Run data is saved locally in /data/engs-oxfair3/orie4536/online-lever-adaptation/experiments/drqn_hp_search/wandb/run-20220902_125832-ni7gn6l1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run lyric-sweep-21
+wandb: ⭐️ View project at https://wandb.ai/hericks/drqn-hyperparameter-search
+wandb: 🧹 View sweep at https://wandb.ai/hericks/drqn-hyperparameter-search/sweeps/k50mz304
+wandb: 🚀 View run at https://wandb.ai/hericks/drqn-hyperparameter-search/runs/ni7gn6l1
+2022-09-02 14:22:24,360 - wandb.wandb_agent - INFO - Cleaning up finished run: ni7gn6l1
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: \ 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: | 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.009 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                                                                                 mean_loss █▅▄▄▄▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▁▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▆▅▄▄▃▃▃▃▃▃▂▂▃▂▂▂▂▂▁▂▂▂▂▁▁▂▂▁▁▂▂▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▅▄▄▄▄▄▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▂▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▅▄▄▄▃▃▃▃▃▃▃▃▂▃▂▂▂▂▂▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▅▅▄▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▅▄▄▃▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▁▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                          mean_test_return ▃▃▃▃▂▂▁▁▂▁▂▂▂▃▃▃▃▃▄▄▅▅▆▅▆▆▇▇▇█▇▇█▇▇█████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▃▃▃▃▃▃▂▁▁▂▂▂▂▃▃▄▄▅▅▅▄▄▅▅▅▅▆▇▇███████▇███
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▂▁▁▁▁▁▁▂▂▃▃▃▄▃▃▄▄▅▆▇▆▇▇▇▇▇▇█▇▇▇▇▇▇█████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▃▃▃▂▂▁▂▁▁▁▂▂▂▂▃▃▃▄▄▄▄▅▄▆▇▆▆▆▆▇▇▇▇▇▇██▇█
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▂▄▂▂▂▂▂▅▇▃▃▄▃▃▃▃▆▄▄▇▅▆▇▅█▅▁▄▄█▂▃▅▃▄▄▅▄▃▂
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ██▆▆▆▆▃▃▃▃▃▃▃▃▃▃▁▁▁▁▃▃▃▃▅▃▅▆▆▆▆▆▅▆▆▅▆▅▅▅
+wandb:                                                                         mean_train_return ▁▂▂▂▁▁▂▂▃▄▄▃▃▄▄▄▅▅▆▆▆▅▆▆▆▆▇▇▇███▇▇▇▇██▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▃▂▂▂▁▃▁▃▃▄▅▄▃▃▃▄▃▆▄█▅▃▄▅▆▅▆▇█▇█▆▇▄▄▇▅█▄▅
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▃▃▃▁▃▄▁▃▃▅▄▄▅▄▅▆▅▆▅▅▅█▆▆▅█▅▆▇▆▅▆▅▇▇▇▇▇▆
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▃▂▃▃▂▁▃▃▄▃▂▂▂▃▂▃▃▅▅▅▅▂▄▅▃▄▅▅▅▅▆▇▄▆▄▅█▇▆▅
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▃▃▃▂▁▂▄▄▄▄▄▅▇▅▅▆▆▆▆▆▇▆▇▇▆▇▇▇▇▇▇████▇▇▇▇
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▂▁▂▂▂▃▂▂▃▃▃▃▃▅▃▄▃▆▄▇▅▆▆▆▇▆▇▇▇▇▇█▆▆▇█▇▆▆
+wandb:                                                                                   sd_loss █▇▇▅▄▃▂▂▂▁▂▁▁▂▂▂▃▂▃▄▄▅▄▅▄▅▅▅▄▄▅▅▅▄▅▅▅▅▅▅
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▇▅▇▅▄▃▅▃▃▃▂▂▁▂▁▂▂▄▄▂▃▂▃▄▂▂▃▃▄▂▄▅▃▅▆▅▅▅▅
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▇▅▄▃▄▁▁▄▂▄▃▂▃▄▃▄▃▄▆▄▆▇▅▃▇▆█▆▅▅▅▅▃▅▅█▇▅▆
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▇▇▅▅▄▃▃▂▂▂▂▁▃▂▂▃▃▃▃▄▃▃▃▂▄▃▃▃▃▃▃▃▃▄▃▄▄▄▄
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▅██▅▅▅▄▃▄▃▃▄▄▃▃▅▅▃▄▄▄▃▃▃▃▅▅▄▃▄▃▂▄▂▂▃▁▂▁▁
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▅▆▄▄▃▃▂▂▁▂▂▂▁▁▁▄▃▄▆▇▇▆█▆▇▇▇▇▇▆▇▇▇▇▇▇▇██
+wandb:                                                                            sd_test_return ▃▃▂▂▂▂▁▁▂▁▂▂▂▃▃▃▄▄▆▆▆▆▇▆▇▇▇▇▇▇█▇▇█▇█▇███
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▃▃▃▃▃▃▂▁▁▂▂▂▂▂▂▅▅▇█▇▇▇█▇██▅▄▄▅▅▅▅▅▅▅▅▅▅▅
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▃▂▁▁▁▂▁▂▃▃▅▃▃▅▅▃▅▄▇█▆▆▇▇▇▇▇▇█▇▇▇▇▇▇█▇▇██
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▃▃▃▂▂▁▂▁▁▁▁▂▂▂▄▅▄▆▆▆▆▆▅█▇▇▆▆▆▇▇▇█▇█▇▇▇▇
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▄▅▅▄▄▄▄▅▅▄▃▃▃▃▃▃▅▃▃▄▄▄▅▄▄▃▂▃▂▅█▃▄▂▂▃▃▂▃▁
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ██▇▇▇▇▅▅▅▅▅▅▅▅▅▅▁▁▁▁▄▄▄▄▆▄▆▆▆▆▆▆▆▆▆▆▆▅▆▆
+wandb:                                                                           sd_train_return ▂▁▂▁▂▃▄▃▄▃▄▄▄▄▅▅▆▆▅▅▄▇▆▆█▇▅▆▅▄▅▇▆█▇▅▅▅█▇
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▃▂▃▁▂▃▃▄▄▂▃▄▃▃▄▆▅▅▅▄▆▆▅▆▅▃▃▁▄▁▆▄█▅▄▆▃▇▇
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▂▂▁▃▃▅▁▃▄▅▆▄▃▄▆▄▆▅▄▅▇▂▃█▅▂▇▇▄██▇▄▅▅▄▆▇▇
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▃▁▂▂▄▃▄▆▃▄▆▅▂▄▆▄▆█▇▅▄▇█▆█▇▆▆▇▆▅▅▇█▆█▂▅▆▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▅▃▅▃▅▅▆▅▇▅▅▄▆▄▄▄▅▄▅▅▅▅▄▄▄█▄▆▃▄▃▄▃▁▂▃▄▄▃▃
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▁▁▂▂▂▃▄▄▂▅▄▅▃▄▅▅▂▄▆▃▆▆▇▆▅▆▅▅▅▅▅▃██▅▄▅█▆
+wandb: 
+wandb: Run summary:
+wandb:                                                                                 mean_loss 0.04431
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.0707
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.03633
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.05335
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.01188
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.04932
+wandb:                                                                          mean_test_return 61.26
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 79.0
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 81.0
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 74.4
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 42.8
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 29.1
+wandb:                                                                         mean_train_return 78.9
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 68.4
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 80.7
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 71.9
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 94.3
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 79.2
+wandb:                                                                                   sd_loss 0.04142
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.04422
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.03468
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.04065
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.00992
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.04796
+wandb:                                                                            sd_test_return 35.39042
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 22.27605
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 26.97324
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 29.17838
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 12.81319
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 45.57887
+wandb:                                                                           sd_train_return 24.16208
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 23.52398
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 26.51226
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 29.59899
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 10.52035
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 22.16504
+wandb: 
+wandb: Synced lyric-sweep-21: https://wandb.ai/hericks/drqn-hyperparameter-search/runs/ni7gn6l1
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20220902_125832-ni7gn6l1/logs
+2022-09-02 14:22:28,417 - wandb.wandb_agent - INFO - Agent received command: run
+2022-09-02 14:22:28,418 - wandb.wandb_agent - INFO - Agent starting run with config:
+	batch_size: 8
+	capacity: 16
+	eps_diff: 0.001
+	eps_min: 0
+	eps_start: 0.5
+	fnn_hidden_dim: 4
+	gamma: 0.975
+	learning_rate: 0.005
+	len_update_cycle: 2
+	n_episodes: 1000
+	n_train_evals: 10
+	rnn_hidden_dim: 4
+	tau: 0.0025
+2022-09-02 14:22:28,428 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python drqn_train.py --batch_size=8 --capacity=16 --eps_diff=0.001 --eps_min=0 --eps_start=0.5 --fnn_hidden_dim=4 --gamma=0.975 --learning_rate=0.005 --len_update_cycle=2 --n_episodes=1000 --n_train_evals=10 --rnn_hidden_dim=4 --tau=0.0025
+2022-09-02 14:22:33,442 - wandb.wandb_agent - INFO - Running runs: ['smr2n6bk']
+wandb: Currently logged in as: hericks. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.13.2
+wandb: Run data is saved locally in /data/engs-oxfair3/orie4536/online-lever-adaptation/experiments/drqn_hp_search/wandb/run-20220902_142234-smr2n6bk
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run smart-sweep-57
+wandb: ⭐️ View project at https://wandb.ai/hericks/drqn-hyperparameter-search
+wandb: 🧹 View sweep at https://wandb.ai/hericks/drqn-hyperparameter-search/sweeps/k50mz304
+wandb: 🚀 View run at https://wandb.ai/hericks/drqn-hyperparameter-search/runs/smr2n6bk
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: \ 0.001 MB of 0.009 MB uploaded (0.000 MB deduped)wandb: | 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                                                                                 mean_loss █▃▃▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▃▃▃▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▄▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▃▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                          mean_test_return ▃▁▃▄▄▄▅▆▆▆▇▇▇▇▇▇█▇▇█▇▇▇▇▇▇██▇█▇█▇█▇██▇██
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▁▃▄▅▅▅▇▇▇▇▇█▇██████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▁▂▃▄▄▅▅▆▆▇▇▇▇▇█████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▁▃▄▅▅▅▆▆▇▇▇████████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▆▃▆▅▅▅▆▇▄▃█▅▆▄▇▅▇▃▃▃▄▆▃▄▄▄▃▃▁▂▂▄▃▄▁▄▃▁█▄
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▅▁▂▄▂▃▅▇▅▆▇▆▇▇▇▇▇▇▇█▇▇▇▇▇▇██████▇███████
+wandb:                                                                         mean_train_return ▁▂▂▃▄▄▄▅▅▆▅▆▆▆▆▇▇▇▇▇█▇██▇▇██████▇▇██▇██▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▃▂▃▄▄▄▅▅▅▅▆▅▆▆▆▇▇▇▇▇▇█▇▇▇██▇▇██▇▇▇▇█▇▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▁▂▃▄▄▄▄▄▅▅▅▅▆▅▇▇▇▇▇▇█▇█▇▇▇▇███▇▇▆█▇█▇█▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▁▁▂▃▄▄▄▅▆▆▅▆▆▇▆▆▆▇▇█▇██▇▇▇█▇▇▇▇▇███▇█▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▂▁▂▃▄▄▅▅▅▆▅▆▅▆▆▆▇██▆█▇█▇▇▇▇▇▇█▇█▆▇█▇▆▇█▇
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▃▂▃▃▄▄▄▅▆▅▆▆▆▆▇▇▇▇▇▇▇▇████▇▇▇██▇███▇███
+wandb:                                                                                   sd_loss █▁▂▄▄▅▅▆▅▆▅▆▅▅▅▅▄▄▄▄▄▅▄▄▄▄▄▄▄▅▄▄▅▅▄▄▄▄▄▄
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▁▂▃▃▄▄▄▄▄▄▄▄▅▄▄▅▄▄▄▄▄▄▄▄▃▄▂▃▄▄▃▃▃▂▃▃▄▄▄
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▁▁▂▂▃▅▆▆▅▅▆▆▅▄▄▄▄▄▄▃▄▄▃▄▄▄▄▄▅▄▄▄▆▄▄▄▄▄▄
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▁▃▂▃▅▄▇▄▇▅▅▄▄▄▅▄▄▅▃▄▅▅▆▅▄▅▅▅▅▅▃▇▅▄▂▄▅▃▁
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▁▂▃▅▂▃▄▄▃▄▄▃▄▄▄▄▃▄▃▄▄▃▃▃▄▄▄▄▄▄▄▃▃▄▄▄▄▄▄
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▆▁▃▆▆▇▇█▇▇▇▇▆▇▆▆▄▄▄▄▄█▄▄▆▄▅▆▄▇▅▅▅▅▆▇▄▄▆▅
+wandb:                                                                            sd_test_return ▃▁▅▅█▇▇▅██▆▇▆▇▆▆▆▇▇▆▆▆▇▇▆▆▆▆▇▆▇▅▆▅▆▅▆▇▃▆
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▂▁▆█▇▇█▅▇▇▅▅▅▅▅▄▅▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▁▅▅█▇█▆▇▇▇▇▇▇▇▅▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▁▅▅▇▇█▇▇▇▇▅▄▅▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▄▄▄▄▃▃▃▃▃▄▁▃▄▄▃▄▃▄▄▄▄▄▄▄▅▄▄▄▇▅▇▄▄▄▄▅██▁█
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▂▅▇▄▆▅▄▆▆▄▆▄▄▄▄▄▄▄▁▄▄▄▄▄▃▁▁▁▁▁▁▂▁▁▁▁▁▁▁
+wandb:                                                                           sd_train_return ▂▄▃▃▄▄▅▄▄▂▄▄▅▄▄▃▅▃▂█▃▇▁▃▇▆▄▄▄▅▁▁█▄▂▄▇▄▃▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▄▆▅█▆▆▇▆▇▆▇▄▇▇▅▅▂▇▄▇██▁▇██▁▁██▁▁▅▅██▄███
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▆▅▆▅▆▅▆▆▄▆▆█▇▆▇▃▆▄▇▄▄▁▇▁▇▇▇▇▄▄▁▄▇█▄▇▁▇▄▇
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▆▇▆▆▇█▇▇▄▂▄▇▄▄▄▇██▄█▁█▁▁███▁▄█▄██▁▄▁█▁██
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▂▃▃▃▃▂▄▂▅▁▄▃▄▄▄▄▄▁▁█▁▄▁▄▄▄▄▄▄▁▄▁█▄▁▄█▄▁▄
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▁▃▂▄▄▄▅▄▂▄▂▂▃▂▂▅▃▃▆▅█▃▁▅▁▁▆▂▇▁▁▃▂▃▃▃▁▁▂
+wandb: 
+wandb: Run summary:
+wandb:                                                                                 mean_loss 0.02047
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.02024
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.01326
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.01343
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.02721
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.0282
+wandb:                                                                          mean_test_return 80.32
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 88.0
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 91.7
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 91.7
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 53.0
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 77.2
+wandb:                                                                         mean_train_return 91.02
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 92.8
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 92.1
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 92.2
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 89.3
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 88.7
+wandb:                                                                                   sd_loss 0.03909
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.04107
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.03151
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.03209
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.05079
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.04243
+wandb:                                                                            sd_test_return 29.23685
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 21.73579
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 20.63465
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 20.27615
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 22.19109
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 40.72618
+wandb:                                                                           sd_train_return 19.32693
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 14.14056
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 20.43118
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 20.81559
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 21.88378
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 22.10103
+wandb: 
+wandb: Synced smart-sweep-57: https://wandb.ai/hericks/drqn-hyperparameter-search/runs/smr2n6bk
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20220902_142234-smr2n6bk/logs
+2022-09-02 15:47:20,852 - wandb.wandb_agent - INFO - Cleaning up finished run: smr2n6bk
+2022-09-02 15:47:21,133 - wandb.wandb_agent - INFO - Agent received command: run
+2022-09-02 15:47:21,133 - wandb.wandb_agent - INFO - Agent starting run with config:
+	batch_size: 8
+	capacity: 16
+	eps_diff: 0.001
+	eps_min: 0
+	eps_start: 0.5
+	fnn_hidden_dim: 4
+	gamma: 0.975
+	learning_rate: 0.01
+	len_update_cycle: 4
+	n_episodes: 1000
+	n_train_evals: 10
+	rnn_hidden_dim: 4
+	tau: 0.0025
+2022-09-02 15:47:21,148 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python drqn_train.py --batch_size=8 --capacity=16 --eps_diff=0.001 --eps_min=0 --eps_start=0.5 --fnn_hidden_dim=4 --gamma=0.975 --learning_rate=0.01 --len_update_cycle=4 --n_episodes=1000 --n_train_evals=10 --rnn_hidden_dim=4 --tau=0.0025
+2022-09-02 15:47:26,161 - wandb.wandb_agent - INFO - Running runs: ['w9h8wxzq']
+wandb: Currently logged in as: hericks. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.13.2
+wandb: Run data is saved locally in /data/engs-oxfair3/orie4536/online-lever-adaptation/experiments/drqn_hp_search/wandb/run-20220902_154726-w9h8wxzq
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run copper-sweep-112
+wandb: ⭐️ View project at https://wandb.ai/hericks/drqn-hyperparameter-search
+wandb: 🧹 View sweep at https://wandb.ai/hericks/drqn-hyperparameter-search/sweeps/k50mz304
+wandb: 🚀 View run at https://wandb.ai/hericks/drqn-hyperparameter-search/runs/w9h8wxzq
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: \ 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: | 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.009 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                                                                                 mean_loss █▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▃▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▃▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                          mean_test_return ▄▁▅▇▇██████▇█▇██▇██▇█▇▇▇▇▇▇▇▇▇▇▇▇▇▆▆▇▇▇▇
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▁▄▅▇▇██████████████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▁▄███████████████████████████████▇▇▇▆▆▆
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▂▅▇▇███████████████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▆▆▇▅▆▇▇▆█▇▇▅▇▄▆▇▄▃▅▃▃▃▃▃▄▃▃▂▃▂▂▃▁▂▂▃▃▅▄▂
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▁▃▆▄▅▅▅▄▄▄▄▅▅▅▅▅▆▆▅▆▄▄▄▄▅▄▄▄▅▅▅▅▅▄▄▅▅▄▅
+wandb:                                                                         mean_train_return ▁▃▄▄▅▅▆▆▆▆▆▆▇▇▇▇▇███████████████████████
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▃▃▄▄▅▅▅▅▆▆▆▆▆▇▇▆█▇▇▇▇▇█▇▇▇▇▇▇▇▇█▇▇██▇██
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▃▅▅▆▅▆▆▆▆▆▆▇▇▇▇▇███████████████████████
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▂▄▄▅▅▅▅▆▆▆▇▇▇▇▇▇███████████████████████
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▃▄▄▅▅▆▆▆▆▇▆▇▇▇▇▇███████████████████████
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▂▄▃▅▅▅▆▆▆▆▆▇▇▇▇▇▇██████████▇███▇█▇██▇▇▇
+wandb:                                                                                   sd_loss █▂▆▆▅▃▂▂▂▂▂▂▂▂▁▂▂▂▂▂▂▂▂▂▁▂▂▂▂▁▂▂▂▁▂▁▂▂▂▂
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▁█▇▆▆▅▅▄▅▄▆▅▆▅▅▅▅▅▅▄▅▆▆▃▆▄▅▅▁▅▄▆▃▇▃▄▅▄▅
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▄▅▅▃▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▄▅▅▄▄▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▂▁▂▁▁▁▂▁▁▁▁▁▁▁▁▁
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▇▅▇██▅▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▁▆▅▅▅▄▅▅▅▅▅▄▅▄▅▅▅▅▅▅▅▄▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
+wandb:                                                                            sd_test_return ▁▁▄▅▅▅▅▅▅▅▅▆▅▆▅▅▆▆▅▆▅▇▇▇▇▆▇▇▇▇▇▆▇▇██▇▆▇█
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▄██▄▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▅▆▇▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▂▂▂▂██████
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ███▇▆▆▅▅▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▃▃▂▂▃▂▂▃▁▃▃▅▃▃▂▂▄▅▅▅▄▃▅▃▆▅▆▆▅▇▃▂▅▅▇█▃▆▄█
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▁▇█▇███▇▇▇██████████▇▇▇▇███▇█████▇▇██▇█
+wandb:                                                                           sd_train_return ▇▇▅█▄▅▄▃▃▁▁▅▂▄▁▁▄▁▅▅▂▅▅▁▂▂▂▅▇▅▂▅▄▅▇▁▁▅▄▄
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▆▅▅▆▅▄▆▆▆▄▂▆▃▇▂▂▇▁██▄██▁▄▄▄███▄█▁██▁▁▄▁▁
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▇▄▅▃▅▃▂▃▂▂▄▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▇█▅▇▅▅▃▃▂▂▃▂▂▂▂▂▂▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▆▅▅█▆▄▃▁▂▂▂▂▁▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▃▄▃▆▁▅▃▁▂▁▂▆▂▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃█▃▃▃█▃█▃▃███
+wandb: 
+wandb: Run summary:
+wandb:                                                                                 mean_loss 0.0078
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.01527
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.00291
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.00323
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.00267
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.01491
+wandb:                                                                          mean_test_return 69.76
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 91.4
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 87.8
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 97.7
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 32.5
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 39.4
+wandb:                                                                         mean_train_return 97.14
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 92.4
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 99.2
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 99.2
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 99.0
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 95.9
+wandb:                                                                                   sd_loss 0.02321
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.03759
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.00053
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.00065
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.00042
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.03635
+wandb:                                                                            sd_test_return 39.8884
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 20.52208
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 30.85378
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.67495
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 21.21975
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 50.2266
+wandb:                                                                           sd_train_return 10.32336
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 20.87636
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.42164
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.63246
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.4714
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 10.18114
+wandb: 
+wandb: Synced copper-sweep-112: https://wandb.ai/hericks/drqn-hyperparameter-search/runs/w9h8wxzq
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20220902_154726-w9h8wxzq/logs
+2022-09-02 17:11:33,623 - wandb.wandb_agent - INFO - Cleaning up finished run: w9h8wxzq
+2022-09-02 17:11:33,890 - wandb.wandb_agent - INFO - Agent received command: run
+2022-09-02 17:11:33,890 - wandb.wandb_agent - INFO - Agent starting run with config:
+	batch_size: 8
+	capacity: 32
+	eps_diff: 0.001
+	eps_min: 0
+	eps_start: 0.5
+	fnn_hidden_dim: 4
+	gamma: 0.975
+	learning_rate: 0.005
+	len_update_cycle: 4
+	n_episodes: 1000
+	n_train_evals: 10
+	rnn_hidden_dim: 4
+	tau: 0.005
+2022-09-02 17:11:33,892 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python drqn_train.py --batch_size=8 --capacity=32 --eps_diff=0.001 --eps_min=0 --eps_start=0.5 --fnn_hidden_dim=4 --gamma=0.975 --learning_rate=0.005 --len_update_cycle=4 --n_episodes=1000 --n_train_evals=10 --rnn_hidden_dim=4 --tau=0.005
+wandb: Currently logged in as: hericks. Use `wandb login --relogin` to force relogin
+2022-09-02 17:11:38,906 - wandb.wandb_agent - INFO - Running runs: ['fx5s2z6c']
+wandb: Tracking run with wandb version 0.13.2
+wandb: Run data is saved locally in /data/engs-oxfair3/orie4536/online-lever-adaptation/experiments/drqn_hp_search/wandb/run-20220902_171138-fx5s2z6c
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fast-sweep-188
+wandb: ⭐️ View project at https://wandb.ai/hericks/drqn-hyperparameter-search
+wandb: 🧹 View sweep at https://wandb.ai/hericks/drqn-hyperparameter-search/sweeps/k50mz304
+wandb: 🚀 View run at https://wandb.ai/hericks/drqn-hyperparameter-search/runs/fx5s2z6c
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: \ 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: | 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.007 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                                                                                 mean_loss █▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▄▃▃▃▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▃▃▃▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▄▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                          mean_test_return ▂▁▂▂▃▆▅▅▅▆▇▇███████████████▇██▇█▇▇▇▇██▇█
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▂▁▃▃▅▆▇▇▆▇▇▇▇▇▇▇████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▁▃▃▅▇▇▇████████████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▁▂▂▃▃▃▄▄▄▅▆▆▆▇▆▆▆▆▆▆▇▆█▇▇▇▇▇▇▇█▇▇▇▇▇█▇█
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▅▄▅▅▅█▄█▇▆▆▄▆▃▂▃▃▃▃▅▅▃▃▂▃▄▄▁▅▃▂▂▃▃▁▃▄▅▅▅
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▄▂▁▁▁▄▄▃▃▃▆▇████████▇▇▇▇▇▇▇▇▇▇▇▇▆▆▆▆▆▆▆▆
+wandb:                                                                         mean_train_return ▁▂▃▃▄▄▅▅▅▅▆▇▇▇▇▇▇▇▇▇██▇▇▇▇██▇▇██▇█▇██▇█▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▃▂▃▃▄▅▄▅▅▆▆▅▆▆▇▆▇▇▇█▇▇▇▇▇▇▇▇▇▇█▇▇▇▇▇▆█▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▂▃▂▃▄▅▅▅▆▆▆▆▇▆▇▇▇▇▇██▇▇▇▇█▇▇▇█▇██▇██▇▇█
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▃▃▄▃▄▄▅▄▅▅▆▇▅▆▆▇▇▆▆▆▆▆▇▆▆▇█▆█▇▇▇▇▆▇███▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▁▃▃▄▃▄▅▅▅▅▆▆▆▆▇▅▄▄▆█▆▅▆▅▅▅▇▆▅▆▆▅█▆▆▅▆▅▆
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▂▃▃▄▄▄▄▄▅▅▇▇▇▇▇▇▇██▇██▇▇▇█████████████▇
+wandb:                                                                                   sd_loss █▁▂▄▆▇▇▆▆▆▆▆▅▆▅▅▄▅▅▅▄▆▅▆▄▄▄▄▅▄▄▄▄▃▄▄▄▄▄▄
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▃▄▁▂▃▄▅▅▆▆▇▇▇▇▇▂▃▃▄▂▄▅▄▃▄▄▄▄▃▄▄▄▄▂▄▅▄▄▄
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▅▄▅▅▅▅▆▆▆▆▆▄▄▄▄▄▃▂▃▄▁▁▃▃▃▄▃▂▃▂▂▂▃▂▂▁▁▁▁
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▇▁▄▃▆▆████▇▇▇▇▇▇▅▇▇▆▆▇█▇▆▆▆▆▆▆▆▆▅▅▆▆▅▅▆▄
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▅▁▃▅▆█▇▆▆▆▆▆▆▇▆▆▆▆▆▇▅▇▅▇▅▅▆▆▆▆▆▆▆▆▇▆▆▆▆▇
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▇▁▃▅██▇▇▆▄▄▄▁▂▂▁▁▂▃▃▃▃▃▃▁▃▃▂▆▄▄▃▃▂▂▂▃▂▁▁
+wandb:                                                                            sd_test_return ▂▁▂▃▆▆████▆▆▄▅▆▅▆▅▅▅▆▆▆▇▆▇▆▇▆▇▇▇▇▇█▇▆▆▇▇
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▂▂▁▂▄▅▄█████████▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▄▄▅▆█▆▆▆▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▄▃▅▇██▇██▇▆▆▆▄▆▇▆▆▆▆▆▆▃▆▆▆▆▆▆▆▃▆▄▆▆▄▃▆▃
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▂▂▂▁▁▄▁▁▁▁▄▄▁▄▄▄▅▅▅▅▅▅▅▇▆▇▅█▄▇▆▆▄▄▆▇▅▅▅▅
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▅▁▁▁▇▇▅▅▅██████████████████████████████
+wandb:                                                                           sd_train_return ▂▃▂▃▃▄▄▂▄▃▃▂▁▄▃▂▄▆▇▅▄▄▅▄█▆▆▃▇▅▅▅▆▃▆▅▆▅▄▇
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▆▅▅▇▅▆▇▆▆▆▆▃▅▆▅▃▇▇▇▇▁▅▄▆██▇▆▇██▄█▆▇█▇█▄█
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▅█▅▆▅▆▄▃▄▂▄▃▄▁▅▄▄▄▄▄▁▁▄▄▄▄▁▄▄▄▄▄▄▁▄▁▁▄▄▄
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▄▅▄▄▄▅▅▄▆▅▃▅▃▆▅▆▃▃▅▅▆▅▅▄█▆▅▃▆▃▅▅▅▅▆▅▁▃▁▇
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▂▂▂▃▃▄▃▂▁▁▅▂▂▄▄▁▅▇█▄▃▄▆▅█▆█▅▇▆▆▇▆▃▅▆█▆▆▇
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▅▄▄▅▅▆▆▆██▅▁▁▄▁▁▁▄▂▄▇▂▃▆▅▅▂▃▄▅▄▁▄▅▃▁▄▅▂▆
+wandb: 
+wandb: Run summary:
+wandb:                                                                                 mean_loss 0.02007
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.01575
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.00531
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.02777
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.04056
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.01093
+wandb:                                                                          mean_test_return 74.02
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 91.5
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 95.2
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 91.4
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 49.6
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 42.4
+wandb:                                                                         mean_train_return 89.4
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 85.8
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 95.7
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 92.1
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 76.3
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 97.1
+wandb:                                                                                   sd_loss 0.04073
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.03865
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.00378
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.05147
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.0605
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.01812
+wandb:                                                                            sd_test_return 35.3019
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 20.56021
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 9.91968
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 20.1781
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 23.89886
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 48.35793
+wandb:                                                                           sd_train_return 21.02768
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 22.92403
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 10.11105
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 20.77632
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 31.29093
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 6.75689
+wandb: 
+wandb: Synced fast-sweep-188: https://wandb.ai/hericks/drqn-hyperparameter-search/runs/fx5s2z6c
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20220902_171138-fx5s2z6c/logs
+2022-09-02 18:34:41,731 - wandb.wandb_agent - INFO - Cleaning up finished run: fx5s2z6c
+2022-09-02 18:34:41,998 - wandb.wandb_agent - INFO - Agent received command: run
+2022-09-02 18:34:41,999 - wandb.wandb_agent - INFO - Agent starting run with config:
+	batch_size: 16
+	capacity: 16
+	eps_diff: 0.001
+	eps_min: 0
+	eps_start: 0.5
+	fnn_hidden_dim: 4
+	gamma: 0.975
+	learning_rate: 0.001
+	len_update_cycle: 4
+	n_episodes: 1000
+	n_train_evals: 10
+	rnn_hidden_dim: 4
+	tau: 0.0075
+2022-09-02 18:34:42,009 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python drqn_train.py --batch_size=16 --capacity=16 --eps_diff=0.001 --eps_min=0 --eps_start=0.5 --fnn_hidden_dim=4 --gamma=0.975 --learning_rate=0.001 --len_update_cycle=4 --n_episodes=1000 --n_train_evals=10 --rnn_hidden_dim=4 --tau=0.0075
+2022-09-02 18:34:47,022 - wandb.wandb_agent - INFO - Running runs: ['n37r72b7']
+wandb: Currently logged in as: hericks. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.13.2
+wandb: Run data is saved locally in /data/engs-oxfair3/orie4536/online-lever-adaptation/experiments/drqn_hp_search/wandb/run-20220902_183449-n37r72b7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run charmed-sweep-264
+wandb: ⭐️ View project at https://wandb.ai/hericks/drqn-hyperparameter-search
+wandb: 🧹 View sweep at https://wandb.ai/hericks/drqn-hyperparameter-search/sweeps/k50mz304
+wandb: 🚀 View run at https://wandb.ai/hericks/drqn-hyperparameter-search/runs/n37r72b7
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: \ 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: | 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                                                                                 mean_loss █▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▃▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                          mean_test_return ▂▃▂▂▁▂▂▁▁▁▁▂▂▂▃▃▄▅▆▆▇▇▇▇▇▇▇▇▇█▇▇▇▇███▇█▇
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▂▁▁▂▂▂▂▂▂▂▃▃▂▄▃▄▄▅▅▆▆▆▆▆▆▆▆▆█▇▇▇█▇▇▇▇█▇
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▃▃▂▂▁▂▃▂▂▂▂▃▄▅▄▄▅▆▆▆▆▇▆▆▇▇▆▇▇▇▇▇▇▇▇▇▇▇██
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▂▂▂▁▂▃▂▂▂▂▃▃▄▄▄▅▆▆▇▇▆▇▆▆▇▆▇█▇▇▇▆▇███▇▇▇
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▃▄▃▄▁▂▄▂▃▂▃▃▃▃▄▄▄▅▄▄▅▅▅▄▅▃▅▃▃█▆▃▃▄▆▇▇▆▆▄
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▃▅▆▅▅▃▁▁▁▁▁▁▁▁▃▃▄▆██████████████████████
+wandb:                                                                         mean_train_return ▂▁▂▂▃▃▃▃▄▂▃▄▄▄▅▄▅▆▆▆▅▇▆▅▆▇▇▆▇▇▇▇█▆▇▇██▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▃▁▂▁▃▃▃▃▄▂▃▂▄▃▅▅▄▄▅▅▆▇▅▆▅▇▆▅▆██▇██▆▆▇▆█▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▃▁▄▂▄▅▃▄▄▃▃▅▅▄▇▄▆▅▅▄▅█▇▆█▅▆█▇▇█▇▇▆▆▇█▇▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▃▁▂▃▃▂▂▄▁▂▄▁▃▃▄▅▅▄▅▃▆▄▄▆▇▅▄▆▆▅▄▆▄▆▅▆█▇▆
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▃▁▃▄▂▂▃▃▃▄▃▅▅▄▄▃▅▆▇▆▅▆▅▄▅▆▇▅▆▅▇▇▇▇▇▇▇█▆▇
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▂▂▁▃▂▂▃▂▃▂▃▃▄▃▃▅▄▅▇▆▆▅▆▅▆▇▆▅▅▆▅▆▅▄▅▆█▆▆▆
+wandb:                                                                                   sd_loss ▁█████▇▆▆▆▆▆▆▆▅▆▇▆▇▇▆▇▇▇▇▇▇▇▇▇▇▇▇▇▆▇▇▇▇▇
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁██▇▆▇▆▆▆▆▆▆▆▆▆▅▅▅▇▇▅▆▅▆▅▆▅▆▅▆▅▆▅▅▅▅▆▅▆▅
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▅▇▇██▇▆▇▇▆▆▇▆▆▆▇▇▅▇▆▇▆▇▆▇▆▇▆▇▇▆▇▇▆▇▇▇▇▇
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁█████▆▆▅▆▅▅▄▄▃▄▅▅▅▅▅▅▆▅▅▆▆▅▆▅▆▅▆▆▅▆▆▆▅▆
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▇▅▇▆▆▅▄▅▅▅▅▆▆▅▆▇▆▇▆▇▆▇▇█▇█▇▆█▆▇▇▇▇▇▆▇▆▆
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▇██▇▇▆▆▆▆▆▆▆▆▆▇▇▇▇▇▇▇▇▇▇█▇█▇▇▇▇▇▇▇█▇▇▇▇
+wandb:                                                                            sd_test_return ▂▂▂▂▂▁▂▁▁▁▁▂▂▅▂▂▃▃▃▃▃▄▄▄▅▅▃▆▇▆▅▇▆█▇▆▆▆▆▇
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▅▅▅▅▅▅▅▅▅▅▄▃▃▇▁▃▅▆▆▅▆▇▇▇▇▆▆▇▇▇█████▇▇▇▇▇
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▃▃▂▂▁▂▃▃▃▃▂▃▄▆▅▅▅▆▆▆▆▇▇▇▇▇▇█▇█▇██▇▇▇▇▇██
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▂▂▂▁▂▂▂▂▂▂▂▂▂▂▂▂▆▅▇▇▆▇▆▆▆▆▇▇▇▇▇▆▇██▇▇▇█
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▄▄▄▃▅▂▄▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▇▃▂▂█▄▁▃▃▇▆▅▅▂▂▂
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ██▅▇▇███████████▇▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                           sd_train_return ▂▂▁▂▂▃▃▃▄▄▄▅▃▅▃▄▅▆▄▅▇▆▆▆▆▆█▇▆▇▅▄▇▇▇▇▅▆▆▅
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▄▃▁▃▄▃▃▅▄▅▄▃▃▆▄▄▄▇▄▅▅▃▄▆▆▃█▄▅▅▃▃▅▅▆▇▇▇▃▃
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▄▂▄▃▅▄▃▄▅▅▅▁▆▄▆▇▆▅▅▇▇▅▇▂▆█▇▇▆▃▅█▇▇▆▃▅▆▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▅▁▃▅▅▄▃▅▄▄▆▇▃▅▄▃▄▄▆▅▆▄█▅▇█▆█▆▆▅▃▄▇▇▅▄▅▆▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▃▃▂▁▁▄▄▁▄▄▁▂▃▃▃▄▃▄▂▆▅▆▅▃▅▆▄▅▅█▄▄▆▄▄▄▆▁▆▄
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▁▁▂▂▃▃▃▄▃▅▅▅▄▃▅▇▇▅▆▇▇█▇▇▇▇█▇▅▇▆▇▆█▇▅▆▆▆
+wandb: 
+wandb: Run summary:
+wandb:                                                                                 mean_loss 0.03802
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.04602
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.03335
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.03249
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.02694
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.05129
+wandb:                                                                          mean_test_return 70.48
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 80.9
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 71.4
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 64.8
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 56.9
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 78.4
+wandb:                                                                         mean_train_return 73.06
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 78.0
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 71.9
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 75.3
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 71.1
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 69.0
+wandb:                                                                                   sd_loss 0.0394
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.03414
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.03574
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.03889
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.03729
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.05144
+wandb:                                                                            sd_test_return 30.20288
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 21.84007
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 33.06627
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 28.88214
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 20.43118
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 41.38223
+wandb:                                                                           sd_train_return 27.87539
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 30.88329
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 29.3464
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 30.76091
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 25.12834
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 27.94836
+wandb: 
+wandb: Synced charmed-sweep-264: https://wandb.ai/hericks/drqn-hyperparameter-search/runs/n37r72b7
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20220902_183449-n37r72b7/logs
+2022-09-02 19:57:24,614 - wandb.wandb_agent - INFO - Cleaning up finished run: n37r72b7
+2022-09-02 19:57:24,858 - wandb.wandb_agent - INFO - Agent received command: run
+2022-09-02 19:57:24,858 - wandb.wandb_agent - INFO - Agent starting run with config:
+	batch_size: 16
+	capacity: 16
+	eps_diff: 0.001
+	eps_min: 0
+	eps_start: 0.5
+	fnn_hidden_dim: 4
+	gamma: 0.975
+	learning_rate: 0.0075
+	len_update_cycle: 16
+	n_episodes: 1000
+	n_train_evals: 10
+	rnn_hidden_dim: 4
+	tau: 0.001
+2022-09-02 19:57:24,860 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python drqn_train.py --batch_size=16 --capacity=16 --eps_diff=0.001 --eps_min=0 --eps_start=0.5 --fnn_hidden_dim=4 --gamma=0.975 --learning_rate=0.0075 --len_update_cycle=16 --n_episodes=1000 --n_train_evals=10 --rnn_hidden_dim=4 --tau=0.001
+2022-09-02 19:57:29,874 - wandb.wandb_agent - INFO - Running runs: ['s26raqw7']
+wandb: Currently logged in as: hericks. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.13.2
+wandb: Run data is saved locally in /data/engs-oxfair3/orie4536/online-lever-adaptation/experiments/drqn_hp_search/wandb/run-20220902_195733-s26raqw7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run atomic-sweep-346
+wandb: ⭐️ View project at https://wandb.ai/hericks/drqn-hyperparameter-search
+wandb: 🧹 View sweep at https://wandb.ai/hericks/drqn-hyperparameter-search/sweeps/k50mz304
+wandb: 🚀 View run at https://wandb.ai/hericks/drqn-hyperparameter-search/runs/s26raqw7
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: \ 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.009 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                                                                                 mean_loss █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                          mean_test_return ▃▁▄▆▇▆▆▆▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇████▇██▇▇█▇▇▇▇▇
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▁▄▅▆▆▇▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆███████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▁▆▆▇▇▇▇▇███████████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▁▅▆████████████████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▇▆▇██▇▆▅▇▆▇█▇▆▆▅▅▄▄▄▅▅▂▃▄▆▄▃▄▁▅▄▂▄▄▄▂▂▂▂
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▁▁▄▃▃▃▃▃▃▅▅▅▅▅▅▅▅▅▅▅▅▅▇▇▇▇▇▇▇▇▇▆▆▇▆▆▇▆▅
+wandb:                                                                         mean_train_return ▁▂▄▄▄▅▆▅▆▆▆▆▆▇▆▆▇▇▇▇█▇▇█▇██▇██▇▇▇▇█▇▇▇▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▂▄▄▃▄▅▅▅▄▄▅▃▆▅▅▇▅▅▆▇▅▇█▅▇█▆▆▇▇▇▅▅▇▆▇▅▆▆
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▂▃▄▄▄▅▅▅▆▅▆▆▆▇▆▆█▇▆▇▇▇▇▇▇█▇█▇▇▇█▇▇▇▇▇▇█
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▂▃▄▄▅▅▄▅▅▅▆▆▇▆▆▆▇▇▇█▇▇█▇█████▇▇▇▇████▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▂▄▄▄▅▆▆▆▆▆▇▆▇▇▇▇███████████████████████
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▃▅▅▅▆▆▆▆▆▇▆▇▇▇▇█▇██████▇██▇███▇██████▇▇
+wandb:                                                                                   sd_loss ▁▅▇███████▇█████▇███████▇█▇▇▇▇▇▇▇▇▇▇▇▇▇▇
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▆▆▆▇▇█▇████████▇███████▇█▇██▇███▇██████
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▅▆▇▇██▇█▇▇▇▇▇▇▇▇▇█▇▇▇▇▇▇█▇▇▇█▇▇█▇█▇▇▇▇▆
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▅▆▇▇▇▇▇█▇▇████████████▇██▇▇▇▇█▇▇█▇█████
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▄▇██▇▇▅▆▅▄▃▂▃▃▂▃▂▂▂▂▂▂▂▂▂▂▃▂▂▃▃▃▂▂▄▃▂▂▄
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▅██▇██████████████████████████████▇████
+wandb:                                                                            sd_test_return ▂▁▅▅▇▇▇▇▇▇▇▇▇▇▇▇▇██▇▇▇█▇▇▇▇▇▇█▇▇█▇▇▇▇▇█▇
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▁▆▆██▇█████████████████████████████████
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▂▁▇████▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▄▅▁▄▁███████████████████████████████████
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▂▁▂▁▂▂▁▁▁▁▂▂▂▅▇▆▆██▇▇▄▆▇▅▇▅▆▅▆▆█▃▆▆▅▆▆▆▅
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▁▁▅▄▄▅▅▄▄▅▆▅▆▆▆▅▅▅▅▅▅▅▅▅▅▄▅▅▄▅▅▅▃▅▅▄▄▄▂
+wandb:                                                                           sd_train_return ▃▃▄▃▄▅▂▄▃▅▅▄▆▃▅▆▄▅▆▆▅▆▆▂█▄▁▇▄▄▇▆▅▇▅▅▅▆▇▇
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▂▂▁▂▄▄▃▄▄▅▅▅▆▄▆▆▂▇█▅▆▇▅▄█▅▁▆▆▅▆▅▇▇▅▆▅█▆▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▃▅▄▅▅▂▃▃▃▅▄▅▅▅▇▇▂▆█▆▆█▃█▆▂█▂▆█▆▂▆█▆█▆█▅
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▆▅▄▅▆▄▅█▆▆▆▆▆▂▇▆▇▄▄█▁▄█▁█▄▄▁▁▁██▄█▄▁▁▁██
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▇▇█▆▇█▄▃▄▄▅▂▅▅▂▅▁▁▁▁▂▁▁▂▃▂▁▁▃▂▁▁▄▁▂▄▄▁▁▅
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▃▄▂▁▁▁▁▄▄▆▃▂▂▂▂▆▂▇▂▃▃▃▃▂█▃▃█▃▃▃█▃▂▃▃▃▃██
+wandb: 
+wandb: Run summary:
+wandb:                                                                                 mean_loss 0.02205
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.04842
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.02483
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.01512
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.00697
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.0149
+wandb:                                                                          mean_test_return 64.74
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 71.9
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 84.4
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 91.5
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 33.6
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 42.3
+wandb:                                                                         mean_train_return 90.66
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 76.3
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 95.8
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 92.3
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 93.1
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 95.8
+wandb:                                                                                   sd_loss 0.0428
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.05941
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.04635
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.03885
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.01399
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.03803
+wandb:                                                                            sd_test_return 37.35315
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 33.48117
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 27.10555
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 20.20588
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 25.77768
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 41.81985
+wandb:                                                                           sd_train_return 20.33857
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 31.28738
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 10.14122
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 20.83827
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 18.32697
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 10.14122
+wandb: 
+wandb: Synced atomic-sweep-346: https://wandb.ai/hericks/drqn-hyperparameter-search/runs/s26raqw7
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20220902_195733-s26raqw7/logs
+2022-09-02 21:20:11,441 - wandb.wandb_agent - INFO - Cleaning up finished run: s26raqw7
+2022-09-02 21:20:11,700 - wandb.wandb_agent - INFO - Agent received command: run
+2022-09-02 21:20:11,700 - wandb.wandb_agent - INFO - Agent starting run with config:
+	batch_size: 16
+	capacity: 32
+	eps_diff: 0.001
+	eps_min: 0
+	eps_start: 0.5
+	fnn_hidden_dim: 4
+	gamma: 0.975
+	learning_rate: 0.005
+	len_update_cycle: 2
+	n_episodes: 1000
+	n_train_evals: 10
+	rnn_hidden_dim: 4
+	tau: 0.01
+2022-09-02 21:20:11,728 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python drqn_train.py --batch_size=16 --capacity=32 --eps_diff=0.001 --eps_min=0 --eps_start=0.5 --fnn_hidden_dim=4 --gamma=0.975 --learning_rate=0.005 --len_update_cycle=2 --n_episodes=1000 --n_train_evals=10 --rnn_hidden_dim=4 --tau=0.01
+2022-09-02 21:20:16,742 - wandb.wandb_agent - INFO - Running runs: ['jofi4mba']
+wandb: Currently logged in as: hericks. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.13.2
+wandb: Run data is saved locally in /data/engs-oxfair3/orie4536/online-lever-adaptation/experiments/drqn_hp_search/wandb/run-20220902_212018-jofi4mba
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run quiet-sweep-435
+wandb: ⭐️ View project at https://wandb.ai/hericks/drqn-hyperparameter-search
+wandb: 🧹 View sweep at https://wandb.ai/hericks/drqn-hyperparameter-search/sweeps/k50mz304
+wandb: 🚀 View run at https://wandb.ai/hericks/drqn-hyperparameter-search/runs/jofi4mba
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: \ 0.001 MB of 0.001 MB uploaded (0.000 MB deduped)wandb: | 0.001 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.009 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: / 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: - 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: \ 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb: | 0.012 MB of 0.012 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:                                                                                 mean_loss █▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) █▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) █▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) █▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) █▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                                                                          mean_test_return ▃▁▂▃▄▅▆▆▆▆▇▇▇▇▇▇████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▂▂▅▅▅▇▆▇▇▇█▇▇▇▇████▇███████▇██████████▇
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▂▄▅▇▇██████████████████████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▁▃▄▅▇▇▇▇█████████▇▇██▇█████████████████
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▇▃▁▃▃▃▁▃▃▃▄▄▇▇▆▇▆██▆▆▃▆▇▅▆▆▆▇▆▄▂▃▄▅▄▄▄▆▅
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▁▁▁▁▁▃▃▃▃▄▆▆▆▆▆████████████████████████
+wandb:                                                                         mean_train_return ▁▁▂▃▃▄▄▅▅▅▆▆▆▆▇▇▇▇▇█▇███▇████▇██▇███▇▇█▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▂▁▂▃▄▄▃▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇█▆██▆▇▇▆▇▇▇█▆▇▇▆▇▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▂▃▄▄▅▆▆▆▆▆▆▇▇▇▇▇▇▇████████▇████████████
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▂▁▂▃▂▄▄▅▅▅▆▆▆▆▇▇▆▇▇▇▆▆▇▇▇▇█▇██▇█▇▇▇▇▇▇█▇
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▁▂▃▃▃▄▃▃▄▆▃▆▆▄▆▆▅▅█▆▇▇▇▅▇▇▆▆▅▇▇▆▅▇▇▅▅█▅
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▂▁▃▃▃▄▅▅▄▆▆▆▆▆▆▇▇▇▇▇▇█▇▇▇▇█▇▇█▇▇▇▇█▇█▇█
+wandb:                                                                                   sd_loss ▁▅▅▆▇███████▇█████████████████▇▇▇▇▇▇▇▇▇▇
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▆▅▆▆▇▇▇▇██▇▇▇█▇▇▆▇▇▆▇▇▆▆▇▇▇▆▇█▇▆▇▇▇▇▇▇█
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▁▅▇▇▅▆▄▃▃▂▂▂▂▂▂▂▂█▃▃▃▄▂▃▃▂▄▃▃▂▂▂▄▂▂▂▂▂▂▁
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▃▅▆▆▇▇▇▇▇▆▆▆▇▇▇▇███▇▇▇▇▇▇▇▇▇▇▇▇▆▇▇▇▇▇▇▇
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▁▄▄▆▇▇▇███▇▇▇▇▇▇▇▇▇▇▇▇▇█▇▇▇▇▇█▇█▇▇▇▇▇▇▇▇
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▁▄▄▅▆▆▇▇▇▇▇▇▇████████████████▇▇▇▇▇▇▇▇▇▇▇
+wandb:                                                                            sd_test_return ▂▁▂▆▇█████▇▆▆▆▆▆▅▅▅▅▆▆▅▅▅▅▅▅▅▆▆▆▆▆▅▆▆▆▅▆
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▁▁▂▆▆█▇▇▇▅▅▄▅▅▅▅▄▄▄▄▇▄▄▄▄▄▄▄▆▄▄▄▄▄▄▄▄▄▄▇
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▆▆▆█▄▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▁▁▂▆█▇▇▇▇▃▃▃▃▃▃▃▃▃▄▄▃▄▄▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▄▃▁▂▂▂▁▃▃▃▄▄▄▄▄▄▅▄▄▄▄▇▄▃▄▄▄▄▄███▇█▄▇▄▄▄▄
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) █▁▁▁▁▁▄▄▄▄▆▇▇▇▇▇▇███████████████████████
+wandb:                                                                           sd_train_return ▁▁▁▁▃▂▃▅▅▅▁▅▄▄▅▃▅▆█▅█▆▄▅█▅▄▅▅▆▅▄▆▆▅▄▆▇▃▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) ▂▂▃▂▂▃▅▅▅▃▄▃▂▅▄▂▅▃▂▆▅▅▁▇▂▅▆▃▂▆▆▂▃▂▆▅▂█▃▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) ▆█▆▆▅▄▃▂▂▂▂▂▂▂▁▂▂▅▄▁▁▁▁▁▄▁▁▄▁▃▁▄▁▁▁▁▁▁▁▁
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) ▅▄▅▅▇▄▆▅▆▃▃▃▆▅▂▄▆▆▆▃██▆▄▆▇▁▆▃▁▆▁▆▆▃▄▆▆▃▆
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) ▂▁▁▂▂▃▃▆▅▆▂▇▅▃▆▄▅▇█▄▅▄▅▄▇▄▄▅▆▆▅▅▆▇▅▅▆▇▄▆
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) ▂▁▃▃▄▄▄▃▅▆▄▄▅▆▅▆▆▄▆██▆▄▆█▆▆▄█▆▄▆▆▇▆▄▆▄▆▄
+wandb: 
+wandb: Run summary:
+wandb:                                                                                 mean_loss 0.02167
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.02704
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.00606
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.01816
+wandb:         mean_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.02922
+wandb:         mean_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.0279
+wandb:                                                                          mean_test_return 75.3
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 88.3
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 97.9
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 91.5
+wandb:  mean_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 50.0
+wandb:  mean_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 48.8
+wandb:                                                                         mean_train_return 88.84
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 86.4
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 99.5
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 96.2
+wandb: mean_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 79.2
+wandb: mean_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 82.9
+wandb:                                                                                   sd_loss 0.03938
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 0.04285
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.00266
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 0.03762
+wandb:           sd_loss_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 0.04846
+wandb:           sd_loss_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 0.04912
+wandb:                                                                            sd_test_return 34.12357
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 21.73093
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.73786
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 20.23336
+wandb:    sd_test_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 17.13995
+wandb:    sd_test_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 51.23757
+wandb:                                                                           sd_train_return 23.10876
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1))_test=(1, 1, 0) 25.87663
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 0))_test=(1, 0, 1) 0.52705
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 0, 1), (1, 0, 1), (1, 1, 0))_test=(0, 1, 1) 10.27186
+wandb:   sd_train_return_split_train=((0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 1) 31.65719
+wandb:   sd_train_return_split_train=((0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0))_test=(0, 0, 0) 28.18372
+wandb: 
+wandb: Synced quiet-sweep-435: https://wandb.ai/hericks/drqn-hyperparameter-search/runs/jofi4mba
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20220902_212018-jofi4mba/logs
+2022-09-02 22:43:55,256 - wandb.wandb_agent - INFO - Cleaning up finished run: jofi4mba
+2022-09-02 22:43:55,467 - wandb.wandb_agent - INFO - Agent received command: exit
+2022-09-02 22:43:55,467 - wandb.wandb_agent - INFO - Received exit command. Killing runs and quitting.
+wandb: Terminating and syncing runs. Press ctrl-c to kill.
