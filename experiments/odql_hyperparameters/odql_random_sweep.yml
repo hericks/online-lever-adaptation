@@ -1,0 +1,47 @@
+program: odql.py
+name: odql-random-sweep
+project: odql-hyperparameter-search
+entity: hericks
+method: random
+metric:
+  goal: maximize
+  name: center_test_eval
+parameters:
+  n_train_evals:
+    value: 1
+  n_actors:
+    value: 24
+  es_n_epochs:
+    value: 300
+  es_popsize:
+    values: [16, 24, 48]
+  es_lr:
+    distribution: log_uniform_values
+    min: 0.0025
+    max: 0.5
+  es_sigma_init:
+    distribution: log_uniform_values
+    min: 0.1
+    max: 5
+  es_sigma_decay:
+    values: [0.995, 0.99, 0.98, 0.97, 0.96, 0.95]
+  es_sigma_min:
+    values: [0.2, 0.1, 0.05, 0.01]
+  hist_rep_dim:
+    value: 4
+  dqn_hidden_dim:
+    value: 4
+  dqn_capacity:
+    value: 16
+  dqn_batch_size:
+    value: 8
+  dqn_lr:
+    value: 0.01
+  dqn_tau:
+    value: 1.0
+  dqn_len_update_cycle:
+    value: 8
+  dqn_eps:
+    value: 0.3
+  dqn_gamma:
+    value: 0.975
