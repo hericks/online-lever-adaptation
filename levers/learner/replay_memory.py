@@ -29,22 +29,41 @@ class TrajectoryBuffer:
     dones: List[bool]
 
 
-class ReplayMemory():
-
+class ReplayMemory:
     def __init__(self, capacity: int):
         """
-        Replay memory to store either state-action-state transitions or 
+        Replay memory to store either state-action-state transitions or
         trajectories used for q-learning.
         """
         self.memory = deque([], maxlen=capacity)
 
     def push(self, element: Union[Transition, Trajectory]):
-        """Pushes transition to the replay memory. """
+        """Pushes transition to the replay memory."""
         self.memory.append(element)
 
     def sample(self, batch_size: int) -> List[Union[Transition, Trajectory]]:
-        """Returns sample (of size batch_size) of replay memory. """
+        """Returns sample (of size batch_size) of replay memory."""
         return random.sample(self.memory, batch_size)
+
+    def __len__(self):
+        return len(self.memory)
+
+
+class RunningReplayMemory:
+    def __init__(self):
+        """
+        Replay memory to store either an increasing amount of state-action-state
+        transitions or trajectories used for (online) q-learning.
+        """
+        self.memory = []
+
+    def push(self, element: Union[Transition, Trajectory]):
+        """Pushes transition to the replay memory."""
+        self.memory.append(element)
+
+    def sample(self, batch_size: int) -> List[Union[Transition, Trajectory]]:
+        """Returns sample (of size batch_size) of replay memory."""
+        return self.memory
 
     def __len__(self):
         return len(self.memory)

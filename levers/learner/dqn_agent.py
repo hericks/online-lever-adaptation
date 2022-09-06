@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from .replay_memory import Transition, ReplayMemory
+from .replay_memory import RunningReplayMemory, Transition, ReplayMemory
 from .utils import polyak_update
 
 
@@ -25,6 +25,7 @@ class DQNAgent:
         tau: float = 1.0,
         gamma: float = 1.0,
         len_update_cycle: int = 10,
+        use_running_memory: bool = False,
     ):
         """
         Learner suitable for simple Q-Learning with neural network function
@@ -58,8 +59,12 @@ class DQNAgent:
         self.len_update_cycle = len_update_cycle
 
         # Initialize the replay memory and batch size used for updates
-        self.memory = ReplayMemory(capacity)
         self.batch_size = batch_size
+        self.use_running_memory = use_running_memory
+        if use_running_memory:
+            self.memory = RunningReplayMemory()
+        else:
+            self.memory = ReplayMemory(capacity)
 
         # Initialize optimizer for Q-network
         # (the learned parameters are frequently copied to the target network)
@@ -75,7 +80,10 @@ class DQNAgent:
         policy network.
         """
         # Reset experience replay
-        self.memory = ReplayMemory(self.memory.memory.maxlen)
+        if self.use_running_memory:
+            self.memory = RunningReplayMemory()
+        else:
+            self.memory = ReplayMemory(self.memory.memory.maxlen)
 
         # If desired, reset policy network
         if state_dict is not None:
@@ -116,14 +124,14 @@ class DQNAgent:
         otherwise.
         """
         # Perform training step only if experience replay is sufficiently filled
-        if len(self.memory) < self.batch_size:
+        if not self.use_running_memory and len(self.memory) < self.batch_size:
             return -1.0
 
         # Obtain batch of samples and convert to stacked tensors
         transitions = self.memory.sample(self.batch_size)
         batch = Transition(*zip(*transitions))
         states = torch.stack(batch.state)
-        actions = torch.tensor(batch.action).view((self.batch_size, 1))
+        actions = torch.tensor(batch.action).view((len(transitions), 1))
         next_states = torch.stack(batch.next_state)
         rewards = torch.tensor(batch.reward).view_as(actions)
         dones = torch.tensor(batch.done)
