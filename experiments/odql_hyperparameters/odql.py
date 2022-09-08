@@ -47,11 +47,12 @@ def get_dqn_learner(env: IteratedLeverEnvironment, config):
             nn.Linear(config.dqn_hidden_dim, env.n_actions()),
         ),
         capacity=config.dqn_capacity,
-        batch_size=config.dqn_batch_size,
+        batch_size=min(config.dqn_batch_size, config.dqn_capacity),
         lr=config.dqn_lr,
         tau=config.dqn_tau,
         len_update_cycle=config.dqn_len_update_cycle,
         gamma=config.dqn_gamma,
+        use_running_memory=config.dqn_use_running_memory,
     )
 
 
@@ -167,7 +168,10 @@ def run_split(
 def run():
     wandb.init()
     config = wandb.config
-    wandb.run.name = f"popsize={config.es_popsize}-lr={config.es_lr:5.4f}-SIGMA-init={config.es_sigma_init:5.4f}-decay={config.es_sigma_decay:5.4f}-min={config.es_sigma_min:5.4f}"
+    if config.dqn_use_running_memory:
+        wandb.run.name = f"running-memory-lr={config.dqn_lr:5.4f}-dqn-eps={config.dqn_eps:2.2f}"
+    else:
+        wandb.run.name = f"capacity={config.dqn_capacity}-batch-size={config.dqn_batch_size}-lr={config.dqn_lr:5.4f}-dqn-eps={config.dqn_eps:2.2f}"
 
     # Obtain train-test splits
     patterns = [(0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0)]

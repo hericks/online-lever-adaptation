@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --time=12:00:00
-#SBATCH --output=./logs/refined-es-sweep/refined-sweep-%j.log
+#SBATCH --output=./logs/refined-dqn-sweep-v2/refined-dqn-sweep-%j.log
 #SBATCH --job-name=odql-search
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=24
@@ -19,4 +19,4 @@ module load cuDNN/8.2.1.32-CUDA-11.3.1
 source activate $HOME/.conda/envs/evotorch
 
 # Start agent
-wandb agent hericks/odql-hyperparameter-search/1psdbo3k
+wandb agent hericks/odql-hyperparameter-search/vg3t1vrn
