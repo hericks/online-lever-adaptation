@@ -1,0 +1,45 @@
+program: odql.py
+name: odql-refined-dqn-sweep
+project: odql-hyperparameter-search
+entity: hericks
+method: grid
+metric:
+  goal: maximize
+  name: center_test_eval
+parameters:
+  n_train_evals:
+    value: 2
+  n_actors:
+    value: 24
+  es_n_epochs:
+    value: 300
+  es_popsize:
+    value: 24
+  es_lr:
+    value: 0.075
+  es_sigma_init:
+    value: 0.25
+  es_sigma_decay:
+    value: 0.995
+  es_sigma_min:
+    value: 0.1
+  hist_rep_dim:
+    value: 4
+  dqn_hidden_dim:
+    value: 4
+  dqn_capacity:
+    values: [4, 8, 16]
+  dqn_batch_size:
+    values: [1, 8, 16]
+  dqn_use_running_memory:
+    values: [True, False]
+  dqn_lr:
+    values: [0.005, 0.01, 0.015, 0.02]
+  dqn_tau:
+    value: 1.0
+  dqn_len_update_cycle:
+    value: 8
+  dqn_eps:
+    values: [0.1, 0.2, 0.3]
+  dqn_gamma:
+    value: 0.975
