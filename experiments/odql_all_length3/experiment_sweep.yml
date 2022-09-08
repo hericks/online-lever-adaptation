@@ -1,0 +1,43 @@
+program: odql_train.py
+name: odql-all-length3
+project: odql-all-length3
+entity: hericks
+method: grid
+metric:
+  goal: maximize
+  name: center_train_eval
+parameters:
+  exp_train_seed:
+    values: [0, 1, 2, 3, 4]
+  exp_train_patterns_index:
+    values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69]
+  n_actors:
+    value: 24
+  es_n_epochs:
+    value: 300
+  es_popsize:
+    value: 24
+  es_lr:
+    value: 0.075
+  es_sigma_init:
+    value: 0.25
+  es_sigma_decay:
+    value: 0.995
+  es_sigma_min:
+    value: 0.1
+  hist_rep_dim:
+    value: 4
+  dqn_hidden_dim:
+    value: 4
+  dqn_use_running_memory:
+    value: True
+  dqn_lr:
+    value: 0.005
+  dqn_tau:
+    value: 1.0
+  dqn_len_update_cycle:
+    value: 8
+  dqn_eps:
+    value: 0.1
+  dqn_gamma:
+    value: 0.975
